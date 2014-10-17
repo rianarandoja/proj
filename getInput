@@ -1,0 +1,23 @@
+def getInput(): # First userInput
+    user_input = input()
+    user_argument_list = []
+    user_command_list = []
+    count_tokens = 0
+
+    # Funktsioon võtab,
+    r_bracket_index = 0
+    l_bracket_index = 0
+    for token in user_input:
+
+        if "[" == token:
+            user_command_list.append(user_input[r_bracket_index:count_tokens])
+            l_bracket_index = count_tokens
+        elif "]" == token:
+            r_bracket_index = count_tokens
+            user_argument_list.append(user_input[l_bracket_index:r_bracket_index])  # Lisan võrrandid listi
+        count_tokens += 1
+
+
+    return (user_argument_list, user_command_list)
+
+# Kui üldse sulge ei leidu, siis ta peaks kõik lisama use
