@@ -1,0 +1,34 @@
+__author__ = 'Priit'
+
+
+def getSortedEquation(equation):
+
+    equation = equation.split("+")
+
+    power = []
+    variables = {}
+
+    i = 0
+    for element in equation:
+        if "x" in element and "**" not in element:
+            element = element.replace("x","x**1")               #teisendan x'i astemele x**1
+        if "x**" in element:
+            variables[int(element[-1])] = element               #Lisan muutujad sõnastikku, võtmeks jääb nende aste
+            power.append(int(element[-1]))                      #Lisan muutujate astmed listi
+        if "x**" not in element:
+            variables[0] = element                              #Vabaliikme aste on 0
+            power.append(0)
+            i += 1
+
+    power.sort()                                                #Järjestan sisendi astmete järgi.
+    power.reverse()                                             #Pööran listi ümber, et kõrgeim aste ees oleks
+
+    sorted_equation = ""
+
+    for element in power:
+        element = variables[int(element)]                       #Muudan astme tagasi muutujaks
+        sorted_equation += element + "+"
+
+    sorted_equation = sorted_equation[0:len(sorted_equation)-1] #Eemaldan "+"'i lõpust
+
+    return (sorted_equation)
