@@ -1,0 +1,113 @@
+__author__ = 'Priit'
+
+from tkinter import *
+from tkinter import ttk
+from math import *
+
+
+def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="",text_5="",text_6=""):
+    height_ = 400
+    width_ = 400
+
+    global magnification_level
+    global axis_num                                                                           # Teljenumbrid.
+    axis_num = 29                                                                             # Teljenumbrid.
+    zoom_level = 2                                                                            # Graafiku suurendus.
+    magnification_level = 30                                                                  # Graafiku suurendus.
+
+
+    frame = Tk()                                                                              # Raam
+    frame.title("y= " + str(equations[0]))
+    frame.geometry(str(height_) +"x" + str(width_))
+    frame.resizable(width=FALSE, height=FALSE)
+    canvas = Canvas(frame, width=width_, height=height_, background="white")
+    font = "Times"
+
+
+    def getCartesianCoordinateSystem(height_=height_, width_=width_, font=font, text_1=text_1, text_2=text_2, text_3=text_3, text_4=text_4, text_5=text_5, text_6=text_6):
+        global axis_num
+        x_axis = (0, height_//2, width_, height_//2)                                          # X-telje pikkus
+        y_axis = (width_//2, 0, width_//2, height_)                                           # Y-telje pikkus
+
+        axis_color = "black"                                                                  # Telje värv
+        grid_color = "ghost white"                                                            # Ruudustiku värvus
+        number_font = "Times 9"
+        for grid_ in range(-width_, width_, 15):                                              # Ruudustik
+            canvas.create_line((0, grid_, width_, grid_), fill=grid_color)                    # Ruudustik
+        for grid_ in range(-height_, height_, 15):                                            # Ruudustik
+            canvas.create_line((grid_, height_, grid_, 0), fill=grid_color)                   # Ruudustik
+
+        for number_line_x in range(-height_, height_-10, 15):                                 # Numbrikriipsud (X-telg)
+            canvas.create_line((number_line_x, 200, number_line_x, 203), fill="grey")         # Numbrikriipsud
+        for number_line_y in range(-width_+15, width_, 15):                                   # Numbrikriipsud (Y-telg)
+            canvas.create_line((200, number_line_y, 203, number_line_y), fill="grey")         # Numbrikriipsud
+
+        canvas.create_text((width_/2) - 5, (height_/2) - 7, text="0", font=number_font)       # Nullpunkt = nr0
+        canvas.create_text((width_/2) - axis_num, (height_/2) - 7, text="1", font=number_font)  # X-telg = nr1
+        canvas.create_text((width_/2) - 5, (height_/2) - axis_num, text="1", font=number_font)  # Y-telg nr1
+        canvas.create_text((width_/2) + (3.17*axis_num), (height_/2) - 7, text="π", font=number_font)  # Pii
+
+        canvas.create_line(x_axis, fill=axis_color, arrow=LAST)                               # X-telg (koos noolega)
+        canvas.create_line(y_axis, fill=axis_color, arrow=FIRST)                              # Y-telg (koos noolega)
+
+        canvas.create_text(60, 300, text=text_1, font=font)                                      # Tekstiväli I
+        canvas.create_text(60, 330, text=text_2, font=font)                                      # Tekstiväli II
+        canvas.create_text(60, 360, text=text_3, font=font)                                      # Tekstiväli III
+        canvas.create_text(260, 300, text=text_4, font=font)                                     # Tekstiväli IV
+        canvas.create_text(260, 330, text=text_5, font=font)                                     # Tekstiväli V
+        canvas.create_text(260, 360, text=text_6, font=font)                                     # Tekstiväli VI
+
+    def plot_function(width_=width_, function=equations):
+        function_line_colors = ["red", "green", "blue", "yellow","DarkMagenta", "orange"]
+        points = []
+        i = 0                                                                                 # Värvi arvestus
+        for equation in function:
+            if "log" in equation or "sqrt" in equation:
+                width_dynamic = 0                                                             # Logaritmi ja juurimies jaoks
+            else:
+                width_dynamic = width_
+            for x in range(-width_, width_dynamic):
+                points.append(-x)                                                             # "-" peegeldab graafikut.
+                if "/x" in equation and x == 0:                                               # Hüperbool
+                    x =+ 1
+                x = -(x/magnification_level)                                                  # Suruendab x'i
+                y = eval(equation)                                                            # Väärtustab sõne
+                y = -y                                                                        # "-" peegeldab graafikut.
+                points.append(y*magnification_level)                                          # Lisab koordinaadid listi
+            if i == len(function_line_colors):                                                # Failsafe.
+                i = 0
+            function_line = canvas.create_line(points, fill=function_line_colors[i], width=2) # Loob graafiku
+            i += 1
+            canvas.move(function_line, 200, 200)                                              # Liigutab f-n õigesse kohta
+            points = []                                                                       # Kustutab koordinaadid
+        canvas.pack()
+
+    def zoom_out():                                                                           # F-n vähendus
+        global magnification_level
+        global axis_num
+        canvas.delete(ALL)                                                                    # Tühjendab tahvli
+        magnification_level /= zoom_level                                                     # Muudab fn-i suurust
+        axis_num /= zoom_level                                                                # Sünkroonib numbrid
+        getCartesianCoordinateSystem()
+        plot_function()
+
+    def zoom_in():                                                                             # F-n Suurendus
+        global magnification_level
+        global axis_num
+        canvas.delete(ALL)
+        magnification_level *= zoom_level
+        axis_num *= zoom_level
+        getCartesianCoordinateSystem()
+        plot_function()
+
+
+    menubar = Menu(frame)                                                                      # Menüüd suurendamiseks.
+    filemenu = Menu(menubar, tearoff=0)
+    filemenu.add_command(label="Vähenda", command=zoom_out)
+    filemenu.add_command(label="Suurenda", command=zoom_in)
+    menubar.add_cascade(label="Suurenda/vähenda", menu=filemenu)
+    frame.config(menu=menubar)
+
+    getCartesianCoordinateSystem()
+    plot_function()
+    mainloop()
