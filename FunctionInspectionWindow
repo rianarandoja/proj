@@ -4,7 +4,6 @@ from tkinter import *
 from tkinter import ttk
 from math import *
 
-
 def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="",text_5="",text_6=""):
     height_ = 400
     width_ = 400
@@ -15,10 +14,12 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
     zoom_level = 2                                                                            # Graafiku suurendus.
     magnification_level = 30                                                                  # Graafiku suurendus.
 
+    global count_event                                                                        # Koordinaatide kuvamise fn.
+    count_event = 0                                                                           # Koordinaatide kuvamise fn.
 
     frame = Tk()                                                                              # Raam
-    frame.title("y= " + str(equations[0]))
-    frame.geometry(str(height_) +"x" + str(width_))
+    frame.title("ReisidAafrikasse")
+    frame.geometry(str(height_) + "x" + str(width_))
     frame.resizable(width=FALSE, height=FALSE)
     canvas = Canvas(frame, width=width_, height=height_, background="white")
     font = "Times"
@@ -60,10 +61,12 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
     def plot_function(width_=width_, function=equations):
         function_line_colors = ["red", "green", "blue", "yellow","DarkMagenta", "orange"]
         points = []
-        i = 0                                                                                 # Värvi arvestus
+        i = 0                                                                                 # Värvi arvestus.
+
         for equation in function:
+            fn_text_count = 1                                                                 # fn'i teksti arvestus.
             if "log" in equation or "sqrt" in equation:
-                width_dynamic = 0                                                             # Logaritmi ja juurimies jaoks
+                width_dynamic = 0                                                             # Logaritmi ja juurimies jaoks (määrab ära alguspunkti)
             else:
                 width_dynamic = width_
             for x in range(-width_, width_dynamic):
@@ -72,10 +75,17 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
                     x =+ 1
                 x = -(x/magnification_level)                                                  # Suruendab x'i
                 y = eval(equation)                                                            # Väärtustab sõne
-                y = -y                                                                        # "-" peegeldab graafikut.
-                points.append(y*magnification_level)                                          # Lisab koordinaadid listi
+                y = -y*magnification_level                                                    # "-" peegeldab & suurendab graafikut.
+                points.append(y)                                                              # Lisab koordinaadid listi
+
+                x *= magnification_level                                                      # Fn nimede kuvamine.
+                if -170 < x < 170 and -170 < y < 170 and fn_text_count != 0:                  # Tagab pildile jäämise.
+                    text = canvas.create_text(x , y, text=equation, font=font)                # Tekstiväli.
+                    canvas.move(text, 200, 200)
+                    fn_text_count = 0                                                         # Igale fn'ile üks nimi.
             if i == len(function_line_colors):                                                # Failsafe.
                 i = 0
+
             function_line = canvas.create_line(points, fill=function_line_colors[i], width=2) # Loob graafiku
             i += 1
             canvas.move(function_line, 200, 200)                                              # Liigutab f-n õigesse kohta
@@ -91,7 +101,7 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
         getCartesianCoordinateSystem()
         plot_function()
 
-    def zoom_in():                                                                             # F-n Suurendus
+    def zoom_in():                                                                            # F-n Suurendus
         global magnification_level
         global axis_num
         canvas.delete(ALL)
@@ -99,6 +109,16 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
         axis_num *= zoom_level
         getCartesianCoordinateSystem()
         plot_function()
+
+    def get_Coordinates(event):                                                             # Väljastab koordinaadid.
+        global count_event                                                                  # Loeb, kui palju on fn käivitatud.
+        global coordinates                                                                  # Tekstiväli koordinaatidele.
+        global axis_num                                                                     # Paneb suurenduse paika
+        if count_event != 0:
+            canvas.delete(coordinates)                                                      # Teksivälja kustutamine.
+        text_to_display = "X=" + str(round((event.x-200)/axis_num,2)) + " Y=" + str(round(-(event.y-200)/axis_num,2))
+        coordinates = canvas.create_text(35, 10, text=text_to_display, font=font + " 7")
+        count_event += 1
 
 
     menubar = Menu(frame)                                                                      # Menüüd suurendamiseks.
@@ -108,6 +128,7 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
     menubar.add_cascade(label="Suurenda/vähenda", menu=filemenu)
     frame.config(menu=menubar)
 
+    frame.bind("<Button-1>", get_Coordinates)                                                  # Koordinaatide kuvamise bindimine.
     getCartesianCoordinateSystem()
     plot_function()
     mainloop()
