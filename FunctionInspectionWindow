@@ -24,7 +24,6 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
     canvas = Canvas(frame, width=width_, height=height_, background="white")
     font = "Times"
 
-
     def getCartesianCoordinateSystem(height_=height_, width_=width_, font=font, text_1=text_1, text_2=text_2, text_3=text_3, text_4=text_4, text_5=text_5, text_6=text_6):
         global axis_num
         x_axis = (0, height_//2, width_, height_//2)                                          # X-telje pikkus
@@ -119,7 +118,6 @@ def FunctionInspectionWindow(equations, text_1="", text_2="", text_3="",text_4="
         text_to_display = "X=" + str(round((event.x-200)/axis_num,2)) + " Y=" + str(round(-(event.y-200)/axis_num,2))
         coordinates = canvas.create_text(35, 10, text=text_to_display, font=font + " 7")
         count_event += 1
-
 
     menubar = Menu(frame)                                                                      # Menüüd suurendamiseks.
     filemenu = Menu(menubar, tearoff=0)
