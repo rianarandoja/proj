@@ -1,0 +1,90 @@
+# coding=utf-8
+
+def getVariableAscii(variable):             #cheks if the input is a letter according to the ascii
+    list = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+            'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+            'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
+    if variable in list:
+        return True
+    else:
+        return False
+def getMissingMultiplicationMarks(argument):    #if there are any missing multiplication mark in the input, it adds
+    argument = list(argument)                       #them
+    for i in range(len(argument)-1):
+        if (argument[i]).strip().isdigit() == True:
+            if getVariableAscii(argument[i+1]) == True:
+                argument.insert(i+1, "*")               #between number and letter
+            elif argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between number and (
+        elif argument[i] == ")":
+            if argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between brackets
+            elif (argument[i+1]).strip().isdigit() == True:
+                argument.insert(i+1, "*")               #between ) and a number
+            elif getVariableAscii(argument[i+1]) == True:
+                argument.insert(i+1, "*")               #between ) and letter
+        elif getVariableAscii(argument[i]) == True:
+            if (argument[i+1]).strip().isdigit() == True:
+                argument.insert(i+1, "*")               #between letter and number
+            elif argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between letter and (
+    return "".join(argument)
+
+from sympy import *
+x = symbols('x')
+#INTEGRAAL
+
+
+
+def getVariableNamesChanged(at_first, expression, after):          # changes variable names
+    expression = list(expression)
+    for i in range(len(expression)):
+         if expression[i] == at_first:
+            expression[i] = after
+    return "".join(expression)
+
+def getStringsRemoved(argument):
+    rem = []
+    for el in argument:
+        if el.isdigit() == False:
+            rem.append(el)
+    for i in range(len(rem)):
+        argument.remove(rem[i])
+    return argument
+
+def getExpressionIntegrated(expression):
+    d_index = expression.index("d")                         #separateing the integration part from the lanes part
+    integral = list(getMissingMultiplicationMarks((expression[:d_index]).strip()))
+    variable = expression[d_index + 1]
+    integral = "".join(getVariableNamesChanged(variable, integral, "x"))
+    after_integral = (expression[d_index + 2:]).strip()
+    if after_integral == "":
+        result = str(integrate(integral, x))
+    else:
+        if "," in after_integral:
+            a = list(after_integral.split(",")[0].strip())
+            b = list(after_integral.split(",")[1].strip())
+        else:
+            spaces = after_integral.count(" ")
+            if spaces == 1:
+                a = list(after_integral.split(" ")[0].strip()) #2st 3ni
+                b = list(after_integral.split(" ")[1].strip())
+            elif spaces == 3:
+                a = list(after_integral.split(" ")[1]) # from 3 to 6
+                b = list(after_integral.split(" ")[3])
+        a = float("".join(getStringsRemoved(a)))
+        b = float("".join(getStringsRemoved(b)))
+        result = str(integrate(integral, (x, a, b)))
+    result = getVariableNamesChanged("x", result, variable)
+    try:
+        result = round(float(result), 2)
+    except:
+        result = result
+    return result
+
+# print(getExpressionIntegrated("(x**2 + 2x)dx  3st 5ni"))
+# print(getExpressionIntegrated("2y dy (2st 33ni)"))
+# print(getExpressionIntegrated("2x dx (2,9)"))
+# print(getExpressionIntegrated("2y dy"))
+# print(getExpressionIntegrated("(x**2 + 2x)dx  3.4st 5ni"))
+# print(getExpressionIntegrated("2y dy from 3 to 5"))
