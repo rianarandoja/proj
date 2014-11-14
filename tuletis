@@ -1,0 +1,41 @@
+# coding=utf-8
+from sympy import *
+list_of_variables = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'ü', 'õ', 'a', 's', 'd', 'f', 'g', 'h', 'j',
+                     'k', 'l', 'ö', 'ä', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
+                     'O', 'P', 'Ü', 'Õ', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ö', 'Ä', 'Z', 'X', 'C', 'V',
+                     'B', 'N', 'M']
+def getVariableAscii(variable):             #cheks if the input is a letter according to the ascii
+    if variable in list_of_variables:
+        return True
+    else:
+        return False
+def getVariableNamesChanged(at_first, expression, after):          # changes variable names
+    expression = list(expression)
+    for i in range(len(expression)):
+         if expression[i] == at_first:
+            expression[i] = after
+    return "".join(expression)
+
+
+x = symbols('x')
+
+#TULETIS
+#diff sin(x) peab olema
+
+def getDerivativeVariable(expression):
+    expression = list(expression)
+    list_of_not_variables_in_derivative = ["a", "e", "c", "o", "s", "i", "n", "t", "l", "r", "g"]
+    for i in range(len(expression)):
+        if expression[i] in list_of_variables and expression[i] not in list_of_not_variables_in_derivative:
+            return expression[i]
+
+def getExpressionDerivative(expression):
+    variable = getDerivativeVariable(expression)
+    expression = getVariableNamesChanged(variable, expression, "x")
+    result = str(diff(expression, x))
+    result = getVariableNamesChanged("x", result, variable)
+    return result
+
+# print(getExpressionDerivative("x**2"))
+# print(getExpressionDerivative("(x)**2"))
+# print(getExpressionDerivative("sin(x)"))
