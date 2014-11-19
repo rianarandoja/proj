@@ -1,4 +1,71 @@
+from tkinter import *
+from tkinter import ttk
+import Parse_input
+import Function_keywords
+import Venn_diagram
+import Function_inspection
+import Weather
 
-print('integreeritud test 1')
 
-1. muudetud githubi kaudu
+def getFunctionWithArgs(user_args):
+    pass
+    return ''
+
+def getFunctionWithComs(user_coms):
+    user_coms_str = ''.join(user_coms)
+    for func in Function_keywords.func_kw_list:
+        for i in range(1, len(func)):
+            if func[i] in user_coms_str.lower().strip():
+                return func[0]
+    return None
+
+def main():
+    user_args_coms = Parse_input.parseInput(main_ent.get(), '[', ']')
+    if user_args_coms == -1:
+        # If user input is incorrect
+        info_lbl_var.set('Ebakorrektne sisend!')
+        root.after(2500, lambda: info_lbl_var.set(''))
+    elif user_args_coms:
+        # If user input is non-empty
+        user_args, user_coms = user_args_coms
+        print('args:', user_args)  #| DB
+        print('coms:', user_coms)  #| DB
+        if user_coms:
+            #print('command')  # DB
+            corr_func_name = getFunctionWithComs(user_coms)
+            if corr_func_name is None:
+                corr_func_name = getFunctionWithArgs(user_args)
+        else:
+            #print('w/o command')  # DB
+            corr_func_name = getFunctionWithArgs(user_args)
+
+        corr_func = corr_func_name + '(user_args)'
+        eval(corr_func)
+
+
+###########
+
+root = Tk()
+root.title("ReisidAafrikasse")
+root.wm_attributes("-topmost", 1)
+
+mainframe_st = ttk.Style()
+mainframe_st.configure('mainframe.TFrame', background='black')
+info_lbl_st = ttk.Style()
+info_lbl_st.configure('info_lbl.TLabel', background='black')
+
+
+mainframe = ttk.Frame(root, padding='20', style='mainframe.TFrame')
+mainframe.grid(row=0, column=0, sticky=(N, W, E, S))
+mainframe.columnconfigure(0, weight=1)
+mainframe.rowconfigure(0, weight=1)
+
+main_ent = ttk.Entry(mainframe, width=50)
+main_ent.grid(row=2, column=1, sticky=(W, E))
+
+info_lbl_var = StringVar()
+ttk.Label(mainframe, textvariable=info_lbl_var, foreground='red', style='info_lbl.TLabel').grid(row=1, column=1, sticky=W)
+
+ttk.Button(mainframe, text='√Reisile!', command=main).grid(row=3, column=1, sticky=N)
+
+root.mainloop()
