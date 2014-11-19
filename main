@@ -19,7 +19,7 @@ def getFunctionWithComs(user_coms):
                 return func[0]
     return None
 
-def main():
+def main(*args):
     user_args_coms = Parse_input.parseInput(main_ent.get(), '[', ']')
     if user_args_coms == -1:
         # If user input is incorrect
@@ -47,13 +47,13 @@ def main():
 
 root = Tk()
 root.title("ReisidAafrikasse")
-root.wm_attributes("-topmost", 1)
+root.wm_attributes("-topmost", 1)  # Always of top
+root.resizable(width=FALSE, height=FALSE)
 
 mainframe_st = ttk.Style()
 mainframe_st.configure('mainframe.TFrame', background='black')
 info_lbl_st = ttk.Style()
 info_lbl_st.configure('info_lbl.TLabel', background='black')
-
 
 mainframe = ttk.Frame(root, padding='20', style='mainframe.TFrame')
 mainframe.grid(row=0, column=0, sticky=(N, W, E, S))
@@ -62,10 +62,12 @@ mainframe.rowconfigure(0, weight=1)
 
 main_ent = ttk.Entry(mainframe, width=50)
 main_ent.grid(row=2, column=1, sticky=(W, E))
+main_ent.focus_set()
 
 info_lbl_var = StringVar()
 ttk.Label(mainframe, textvariable=info_lbl_var, foreground='red', style='info_lbl.TLabel').grid(row=1, column=1, sticky=W)
 
 ttk.Button(mainframe, text='√Reisile!', command=main).grid(row=3, column=1, sticky=N)
+main_ent.bind('<Return>', main)
 
 root.mainloop()
