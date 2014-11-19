@@ -1,0 +1,125 @@
+def getMinusToPlusMinus(argument):                  #changes - to +-
+    for i in range(len(argument)):
+        if argument[i] == "-":
+            argument[i] = "+-"
+    return argument
+
+def getOperatorsChanged(argument):                  #changes - to + and + to +-
+    for i in range(len(argument)):
+        if argument[i] == "-":
+             argument[i] = "+"
+        elif argument[i] == "+":
+             argument[i] = "+-"
+    return argument
+
+def getRidOfSpaces(argument):                       #gets rid of the spaces inside the argument
+    argument = argument.split(" ")
+    argument = "".join(argument)
+    return argument
+
+def getAbsWithoutOperatorsChanges(right_side):      #changes operators on the right side, if there are abs
+    right_side = list(right_side)
+    between_abs = []
+    for i in range(len(right_side)):
+        if right_side[i] == "|":
+            between_abs.append(i)           #appends abs indexes into list and doesent switch operatos between them
+    abs = right_side[between_abs[0]:between_abs[1]+1]
+    return "".join(getOperatorsChanged(right_side[:between_abs[0]])) + "".join(getMinusToPlusMinus(abs)) + \
+           "".join(getOperatorsChanged(right_side[between_abs[1]+1:]))
+
+def getBracketsWithoutOperatorsChanges(right_side):     #changes operators on the right side if there are brackets
+    first = []
+    second = []
+    counter = 0
+    for i in range(len(right_side)):
+        if right_side[i] == "(" or right_side[i] == ")":
+            if right_side[i] == "(":
+                if counter == 0:
+                    first.append(i)  #appends the first bracket to list
+                counter += 1         #counts opened brackets
+            else:
+                counter -= 1         #if there is an closeing bracket, it subtracts on from couner
+                if counter == 0:        #and once the counter hits 0, it appends the index of ending bracket to
+                    second.append(i)        #the list
+    between_brackets = []
+    for i in range(len(first)):
+        between_brackets.append(right_side[first[i]:second[i]+1])   #appends the area between brackets into list
+    brackets = []  #adds brackets and the after brackets part until the last brackets
+    for i in range(len(between_brackets)-1):
+        bracket = "".join(getMinusToPlusMinus(between_brackets[i]))
+        brackets.append(bracket)
+        after_bracket = "".join(getOperatorsChanged(right_side[int(second[i]+1):int(first[i+1])]))
+        brackets.append(after_bracket)
+    brackets_ = "".join(brackets)
+    beginning = "".join(getOperatorsChanged(right_side[:int(first[0])]))
+    last_bracket = "".join(getMinusToPlusMinus(between_brackets[-1]))
+    end = "".join(getOperatorsChanged(right_side[int(second[-1]+1):]))
+    right_side = beginning + brackets_ + last_bracket + end  #adds the baginning, the first brackets with the area
+    return right_side                                       #between them, last bracket and the ending
+
+def getEverythingOnOneSideAsString(argument):       #takes an argument as string and returns the it
+    argument = list(getRidOfSpaces(argument))       #with all arguments on the left side with operators changed also
+    equal_sign = argument.index("=")
+    left_side = argument[:equal_sign]
+    left_side = "".join(getMinusToPlusMinus(left_side))
+    right_side_beginning = equal_sign+1
+    right_side = argument[right_side_beginning:]  #list of the things on the right side
+    try:
+        if right_side == ["0"]:                                 #checks if maybe everything is already on left side
+            everything_on_left = str(left_side)
+        else:
+            if right_side[0] == "-" or right_side[0] == "+":    #cheks if the first argument on the right
+                additional_operator = "".join([])                 #side has - or +, if it doesnt, then it adds
+            else:                                                   #one in the end
+                additional_operator = "".join(["+-"])
+            if "(" in right_side:                                           #cheks if there are any brackets
+                right_side = getBracketsWithoutOperatorsChanges(right_side)
+            elif "|" in right_side:                                         #cheks if there are any abs
+                 right_side = getAbsWithoutOperatorsChanges(right_side)
+            else:
+                right_side = "".join(getOperatorsChanged(right_side))
+            everything_on_left = str("".join(left_side + additional_operator + right_side))   #add left and right sides
+    except:
+        everything_on_left =  "Something went wrong in getEverythingOnOneSideAsString"
+    return everything_on_left
+
+def getVariableAscii(variable):             #cheks if the input is a letter according to the ascii
+    list = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'ü', 'õ', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö', 'ä', 'z', \
+        'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Ü', 'Õ', 'A', 'S', \
+        'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ö', 'Ä', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
+    if variable in list:
+        return True
+    else:
+        return False
+
+    #variable_ascii = ord(variable)
+    #if variable_ascii >= 65 and variable_ascii <= 90 or variable_ascii >= 97 and variable_ascii <= 122:
+    #    variable_ascii = True
+    #else:
+    #    variable_ascii = False
+    #return variable_ascii
+
+def getMissingMultiplicationMarks(argument):    #if there are any missing multiplication mark in the input, it adds
+    argument = list(argument)                       #them
+    for i in range(len(argument)-1):
+        if (argument[i]).strip().isnumeric() == True:
+            if getVariableAscii(argument[i+1]) == True:
+                argument.insert(i+1, "*")               #between number and letter
+            elif argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between number and (
+        elif argument[i] == ")":
+            if argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between brackets
+            elif (argument[i+1]).strip().isnumeric() == True:
+                argument.insert(i+1, "*")               #between ) and a number
+            elif getVariableAscii(argument[i+1]) == True:
+                argument.insert(i+1, "*")               #between ) and letter
+        elif getVariableAscii(argument[i]) == True:
+            if (argument[i+1]).strip().isnumeric() == True:
+                argument.insert(i+1, "*")               #between letter and number
+            elif argument[i+1] == "(":
+                argument.insert(i+1, "*")               #between letter and (
+    return "".join(argument)
+
+def getInputOrganized(argument):            #changes operators, takes everything on one side and adds missing * marks
+    return getMissingMultiplicationMarks(getEverythingOnOneSideAsString(argument))
