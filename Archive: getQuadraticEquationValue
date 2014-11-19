@@ -1,10 +1,8 @@
-__author__ = 'Priit'
 
 import math
 import cmath
 
 def getQuadraticEquationValue(equation):
-
     equation = equation.split("+")                      #Eraldan muutujad
 
     if equation[0] == "x**2":                           #Eraldan a, arvestan, et a == 1
@@ -24,16 +22,13 @@ def getQuadraticEquationValue(equation):
     else:
         c = float(equation[2])
 
-    discriminant = (b ** 2) - (4 * a * c)
-
+    discriminant = (b**2) - (4*a*c)
     if discriminant < 0:                                #Arvestan kompleksarve
-        x_1 = ((-b) + cmath.sqrt(discriminant)) / (2 * a)
-        x_2 = ((-b) - cmath.sqrt(discriminant)) / (2 * a)
+        x_1 = ((-b) + cmath.sqrt(discriminant)) / (2*a)
+        x_2 = ((-b) - cmath.sqrt(discriminant)) / (2*a)
     else:
-        x_1 = ((-b) + math.sqrt(discriminant)) / (2 * a)
-        x_2 = ((-b) - math.sqrt(discriminant)) / (2 * a)
-
+        x_1 = ((-b) + math.sqrt(discriminant)) / (2*a)
+        x_2 = ((-b) - math.sqrt(discriminant)) / (2*a)
     return (x_1,x_2)
 
-
-print(getQuadraticEquationValue("-x**2+-100x+-5"))
+#print(getQuadraticEquationValue("-x**2+-100x+-5"))
