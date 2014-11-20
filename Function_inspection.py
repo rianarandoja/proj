@@ -2,13 +2,25 @@ from tkinter import *
 from tkinter import ttk
 from math import *
 
-def functionInspectionWindow(equations,
-                             text_1="",
-                             text_2="",
-                             text_3="",
-                             text_4="",
-                             text_5="",
-                             text_6=""):
+def funcInspectArgsHandler(user_args):
+    pass
+
+def funcInspect(raw_equations,
+                text_1="",
+                text_2="",
+                text_3="",
+                text_4="",
+                text_5="",
+                text_6=""):
+    equations = []
+    for equation in raw_equations:
+        if ',' in equation:
+            for new_equation in equation.split(','):
+                equations.append(new_equation)
+        else:
+            equations.append(equation)
+
+
     height_width = 400
     height_width = 400
 
@@ -22,7 +34,7 @@ def functionInspectionWindow(equations,
     count_event = 0                                                                           # Koordinaatide kuvamise fn.
 
     root = Tk()                                                                              # Raam
-    root.title("ReisidAafrikasse")
+    root.title("Funktsioonide uurimine")
     root.geometry(str(height_width) + "x" + str(height_width))
     root.resizable(width=FALSE, height=FALSE)
     canvas = Canvas(root, width=height_width, height=height_width, background="white")
@@ -82,22 +94,21 @@ def functionInspectionWindow(equations,
 
         for equation in function:
             fn_text_count = 1  # fn'i teksti arvestus.
-            if "log" in equation or "sqrt" in equation or "ln" in equation:
-                width_dynamic = 0 # Logaritmi ja juurimies jaoks (määrab ära alguspunkti)
-            else:
-                width_dynamic = width_
-            for x in range(-width_, width_dynamic):
-                points.append(-x)  # "-" peegeldab graafikut.
-                if "/x" in equation and x == 0:  # Hüperbool
-                    x =+ 1
-                x = -(x/magnification_level)  # Suurendab x'i
-                y = eval(equation)  # Väärtustab sõne
+            for x in range(-width_, width_):
+                try:
+                    points.append(-x)  # "-" peegeldab graafikut.
+                    x = -(x/magnification_level)
+                    y = eval(equation)  # Väärtustab sõne
+                except (ZeroDivisionError, ValueError) as _:
+                    points.pop()
+                    continue
+
                 y = -y*magnification_level  # "-" peegeldab & suurendab graafikut.
                 points.append(y)
 
                 x *= magnification_level  # Fn nimede kuvamine.
                 if -170 < x < 170 and -170 < y < 170 and fn_text_count != 0:  # Tagab tahvlile jäämise.
-                    text = canvas.create_text(x , y, text=equation, font=font)  # Tekstiväli.
+                    text = canvas.create_text(x-15 , y-10, text=equation, font=font, fill=function_line_colors[i])  # Tekstiväli.
                     canvas.move(text, 200, 200)
                     fn_text_count = 0  # Igale fn'ile üks nimi.
             if i == len(function_line_colors):  # Failsafe.
@@ -110,20 +121,21 @@ def functionInspectionWindow(equations,
         canvas.pack()
 
     def zoom_out():  # F-n vähendus
-        global magnification_level
-        global axis_num
-        canvas.delete(ALL)  # Tühjendab tahvli
-        magnification_level /= zoom_level  # Muudab fn-i suurust
-        axis_num /= zoom_level  # Sünkroonib numbrid
-        getCartesianCoordinateSystem()
-        plot_function()
+        zoomInOut(False)
 
     def zoom_in():  # F-n Suurendus
+        zoomInOut(True)
+
+    def zoomInOut(z_in):
         global magnification_level
         global axis_num
         canvas.delete(ALL)
-        magnification_level *= zoom_level
-        axis_num *= zoom_level
+        if z_in:
+            magnification_level *= zoom_level
+            axis_num *= zoom_level
+        else:
+            magnification_level /= zoom_level
+            axis_num /= zoom_level
         getCartesianCoordinateSystem()
         plot_function()
 
