@@ -5,8 +5,8 @@ func_kw_list = [
     [],
     ['Venn_diagram.drawVennDiagram',
      'venni diagramm', 'venn'],
-    ['Function_inspection.functionInspectionWindow',
-     'f(x)', 'funktsioon'],
+    ['Function_inspection.funcInspect',
+     'f', 'funktsioon'], # check
     ['Weather.WeatherInformation',
      'ilm']
 ]
