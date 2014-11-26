@@ -1,14 +1,13 @@
-from sympy import *
-x = symbols("x")
+import sympy
+x = sympy.symbols("x")
 
 def Calculator(expr, round_to="3"):
-    round_to = sympify(round_to)
-    expr = sympify(expr)
+    round_to = sympy.sympify(round_to)
+    expr = sympy.sympify(expr)
     answer = str(expr.evalf(round_to))
-    if answer[-1] == ".":
-        answer = answer[:-1]
-    return answer
+    return answer.rstrip('.')
 
-#print(Calculator("log(2)**2 - 6*x/sqrt(17)", "7"))
-#rint(Calculator("17-3"))
-#print(Calculator("6*17"))
+if __name__ == '__main__':
+    print(Calculator("log(2)**2 - 6*x/sqrt(17)", "7"))
+    print(Calculator("log(3)", '6'))
+    print(Calculator("6*17"))
