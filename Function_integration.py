@@ -3,21 +3,11 @@ from sympy import integrate, symbols
 
 x = symbols('x')
 
-def getStringsRemoved(argument):
-    # removes strings from argument, so there stay only numbers and minuses
-    rem = []
-    for el in argument:
-        if not el.isdigit() and el != "-" and el != ".":
-            rem.append(el)
-    for i in range(len(rem)):
-        argument.remove(rem[i])
-    return argument
-
 def integrateFunction(expression):
     d_index = expression.index("d")
-    integral = list(getMissingMultiplic((expression[:d_index]).strip()))
+    integral = getMissingMultiplic((expression[:d_index]).strip())
     variable = expression[d_index+1]
-    integral = ''.join(integral).replace(variable, 'x')
+    integral = integral.replace(variable, 'x')
     # separating the integration part from the lanes part
     after_integral = (expression[d_index+2:]).strip()
     if after_integral == "":
@@ -25,21 +15,26 @@ def integrateFunction(expression):
         # if the integral in infinite
     else:
         if "," in after_integral:
-        # if lanes are separated with commas
-            a = list(after_integral.split(",")[0].strip())
-            b = list(after_integral.split(",")[1].strip())
-        else:
-            spaces = after_integral.count(" ")
-            # if lanes are written down with words, it counts spaces
-            if spaces == 1:
-                a = list(after_integral.split(" ")[0].strip())
-                b = list(after_integral.split(" ")[1].strip())
-            elif spaces == 3:
-                a = list(after_integral.split(" ")[1])
-                b = list(after_integral.split(" ")[3])
-        a = float("".join(getStringsRemoved(a)))
-        b = float("".join(getStringsRemoved(b)))
-        result = str(integrate(integral, (x, a, b)))
+            # if lanes are separated with commas
+            a = after_integral.split(",")[0].strip().strip("(")
+            b = after_integral.split(",")[1].strip().strip(")")
+        elif "from" in after_integral:
+            m_index = after_integral.index("m")
+            t_index = after_integral.index("t")
+            a = after_integral[m_index+1:t_index].strip()
+            b = after_integral[t_index+2:].strip()
+        elif "ni" in after_integral:
+            t_index = after_integral.index("t")
+            if after_integral[t_index-2] == "-":
+                a = after_integral[:t_index-2]
+            else:
+                a = after_integral[:t_index-1]
+            n_index = after_integral.index("n")
+            if after_integral[n_index-1] == "-":
+                b = after_integral[t_index+1:n_index-1].strip()
+            else:
+                b = after_integral[t_index+1:n_index].strip()
+        result = str(integrate(integral, (x, float(a), float(b))))
     result = result.replace("x", variable)
     try:
         result = round(float(result), 2)
