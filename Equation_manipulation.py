@@ -5,10 +5,9 @@
 
 def isVariable(variable):
     # returns True, if the symbol is in list of variables
-    list_of_variables = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'ü', 'õ', 'a', 's', 'd', 'f', 'g', 'h', 'j',
-                         'k', 'l', 'ö', 'ä', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
-                         'O', 'P', 'Ü', 'Õ', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ö', 'Ä', 'Z', 'X', 'C', 'V',
-                         'B', 'N', 'M'}
+    list_of_variables = {'q', 'w', 'y', 'u', 'p', 'ü', 'õ', 'd', 'f', 'j', 'k','ö', 
+                         'ä', 'z', 'x', 'v', 'b', 'm', 'Q', 'W', 'Y', 'U', 'P','Ü', 
+                         'Õ', 'D', 'F', 'J', 'K', 'Ö', 'Ä', 'Z', 'X', 'V', 'B', 'M'}
     if variable in list_of_variables: return True
     return False
 
