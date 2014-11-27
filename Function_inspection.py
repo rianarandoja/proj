@@ -13,16 +13,17 @@ def funcInspect(raw_equations,
                 text_5="",
                 text_6=""):
 
-    """Funktsioon võtab sisse listi valemitega. Valemite arv ei ole piiratud. Funktsioon joonistab seejärel teljestiku
-     ja graafiku. Pärast iga suurendust joonistatakse kõik uuesti. Uuesti ei joonistata navigeerides, tulenevalt sellest on
+    """Funktsioon võtab sisse listi valemitega. Valemite arv ei ole piiratud. Funktsioon joonistab seejärel teljestiku ja
+     ja graafiku. Pärast igat suurendust joonistatakse kõik uuesti. Uuesti ei joonistata navigeerides, sellest tulenevalt on
      navigeerimine limiteeritud (jõudlust silmas pidades).
-     Akna suuruse muutmine põhjustab koordinaatide arvutamises vigu. Tekstiväljad on teistele programmidele kasutamiseks.
+     Akna suuruse muutmine põhjustab koordinaatide arvutamises vigu. Tekstiväljad on teistele funktsioonidele kasutamiseks.
 
      - Väärtus axis_num kalibreerib numbrid teljestiku ja pikslitega. Ta on oluline, et suurendus töötaks.
-     - Väärtus magnification_level määrab ära võrrandi suurenduse.
+     - Väärtus magnification_level määrab ära võrrandi suurenduse
      - Väärtused move_to_x ja move_to_y liidetakse pikslitele otsa, mis tagab õigete koordinaadite kuvamise pärast graafiku liigutamist.
      - Väärtused move_x ja move_y liigutavad graafikut.
-     - count_moves_horizontally ja count_moves_vertically limiteerivad kasutaja graafiku liigutamist."""
+     - count_moves_horizontally ja count_moves_vertically limiteerivad kasutaja graafiku liigutamist.
+     Võimalik, et axis_num ja magnification_level peavad olema võrdsed."""
 
     equations = []
     for equation in raw_equations:
@@ -76,28 +77,23 @@ def funcInspect(raw_equations,
         grid_color = "lightgrey"  # Ruudustiku värvus
         number_font = "Times 8"
 
-        if axis_num <= 232:  # Ruudustik
-            for x in range(-height_ + 10, height_, 15):# 10 kalibreerib teljestiku numbritega.
-                canvas.create_line((-width_ + axis_num, x + axis_num, width_,  x + axis_num), fill=grid_color)
-                canvas.create_line((x + axis_num, height_, x + axis_num, -height_), fill=grid_color)
+       # Ruudustik
+        for x in range(-height_ + 10, height_, 15):# 10 kalibreerib teljestiku numbritega.
+            canvas.create_line((-width_ + axis_num, x + axis_num, width_,  x + axis_num), fill=grid_color)
+            canvas.create_line((x + axis_num, height_, x + axis_num, -height_), fill=grid_color)
 
-            for x in range(-height_ + 10, height_, 30):  # 10 liigutab teljekriipsud paika
-                text_x = round((x-200)/axis_num + 1, 1)
-                if text_x == 0.0:
-                    text_x = 0
-                canvas.create_text(x + axis_num, (height_/4) - 15, text=str(text_x), font=number_font)
-                canvas.create_line((x + axis_num, 197, x + axis_num, 203), fill="grey")
-                # Y-telg:
-                text_y = -round((x-200)/axis_num + 1, 1)
-                if text_y == 0.0:  # Topelt 0.0 ei ole sobiv.
-                    text_y = ""
-                canvas.create_text((width_//4) - 15, x + axis_num, text=str(text_y), font=number_font)
-                canvas.create_line((197, x + axis_num, 203, x + axis_num), fill="grey")
-
-        else:
-            for grid_ in range(-width_, width_, 15):
-                canvas.create_line((0, grid_, width_, grid_), fill=grid_color)
-                canvas.create_line((grid_, height_, grid_, 0), fill=grid_color)
+        for x in range(-height_ + 10, height_, 30):  # 10 liigutab teljekriipsud paika
+            text_x = round((x-200)/axis_num + 1, 1)
+            if text_x == 0.0:
+                text_x = 0
+            canvas.create_text(x + axis_num, (height_/4) - 15, text=str(text_x), font=number_font)
+            canvas.create_line((x + axis_num, 197, x + axis_num, 203), fill="grey")
+            # Y-telg:
+            text_y = -round((x-200)/axis_num + 1, 1)
+            if text_y == 0.0:  # Topelt 0.0 ei ole sobiv.
+                text_y = ""
+            canvas.create_text((width_//4) - 15, x + axis_num, text=str(text_y), font=number_font)
+            canvas.create_line((197, x + axis_num, 203, x + axis_num), fill="grey")
 
         canvas.create_line(x_axis, fill=axis_color, arrow=LAST)  # X-telg (koos noolega)
         canvas.create_line(y_axis, fill=axis_color, arrow=FIRST)  # Y-telg (koos noolega)
@@ -132,7 +128,7 @@ def funcInspect(raw_equations,
 
                 x *= magnification_level  # Fn nimede kuvamine.
                 if -170 < x < 170 and -170 < y < 170 and fn_text_count != 0:  # Tagab tahvlile jäämise.
-                    text = canvas.create_text(x-15, y-10, text=equation, font=font, fill=function_line_colors[i])  # Tekstiväli.
+                    text = canvas.create_text(x-15, y-10, text= "y = " + equation, font=font, fill=function_line_colors[i])  # Tekstiväli.
                     canvas.move(text, 200, 200)
                     fn_text_count = 0  # Igale fn'ile üks nimi.
             if i == len(function_line_colors):  # Failsafe.
@@ -153,20 +149,21 @@ def funcInspect(raw_equations,
     def zoomInOut(z_in):
         global magnification_level
         global axis_num
+        global count_moves_horizontally
+        global count_moves_vertically
         global move_to_x
         global move_to_y
         move_to_x = 1
         move_to_y = 1
 
         # Taastab graafiku liigutamise võimaluse
-        global count_moves_horizontally
-        global count_moves_vertically
         count_moves_horizontally, count_moves_vertically = 0, 0
         canvas.delete(ALL)
-        if z_in:
+
+        if z_in and axis_num <= 232:
             magnification_level *= zoom_level
             axis_num *= zoom_level
-        else:
+        if not z_in and axis_num != 0.00091552734375:
             magnification_level /= zoom_level
             axis_num /= zoom_level
         getCartesianCoordinateSystem()
@@ -184,11 +181,6 @@ def funcInspect(raw_equations,
         text_to_display = "X=" + str(round((event.x-200+move_to_x)/axis_num, 2)) + " Y=" + str(round(-(event.y-200+move_to_y)/axis_num, 2))
         coordinates = canvas.create_text(40, 10, text=text_to_display, font=font + " 9")
         count_event += 1
-
-    menu_bar = Menu(root)
-    menu_bar.add_command(label="Vähenda", command=zoom_out)
-    menu_bar.add_command(label="Suurenda", command=zoom_in)
-    root.config(menu=menu_bar)
 
     def onWheel(event):
         d = event.delta
@@ -229,16 +221,16 @@ def funcInspect(raw_equations,
                 move_to_y = move_y*count_moves_vertically
         canvas.move(ALL, move_x, move_y)
 
-    def left(event):
+    def left(event=""):
         scroll_function(left=True)
 
-    def right(event):
+    def right(event=""):
         scroll_function(right=True)
 
-    def up(event):
+    def up(event=""):
         scroll_function(up=True)
 
-    def down(event):
+    def down(event=""):
         scroll_function(down=True)
 
     root.bind("<Button-1>", get_Coordinates)  # Koordinaatide kuvamise bindimine.
@@ -247,6 +239,16 @@ def funcInspect(raw_equations,
     root.bind("<Down>", down)
     root.bind("<Left>", left)
     root.bind("<Right>", right)
+
+    menu_bar = Menu(root)
+    menu_bar.add_command(label="Vähenda", command=zoom_out)
+    menu_bar.add_command(label="Suurenda", command=zoom_in)
+    menu_bar.add_command(label="⇐", command=left)
+    menu_bar.add_command(label="⇑", command=up)
+    menu_bar.add_command(label="⇒", command=right)
+    menu_bar.add_command(label="⇓", command=down)
+    root.config(menu=menu_bar)
+
     getCartesianCoordinateSystem()
     plot_function()
     root.mainloop()
