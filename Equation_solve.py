@@ -7,13 +7,37 @@ from sympy import symbols, solve
 x = symbols("x")
 
 def solveEquation(equation):
-    variable = ""
+    if "sqrt" in equation:
+        counter = 0
+        sqrt_counter = equation.count("sqrt")
+        while sqrt_counter > counter:
+            first_paren = equation.index("sqrt")
+            after_paren = equation[first_paren+4:]
+            counter_parens = 0
+            for i in range(len(after_paren)):
+                if after_paren[i] == "(":
+                    counter_parens += 1
+                elif after_paren[i] == ")":
+                    counter_parens -= 1
+                    if counter_parens == 0:
+                        paren_index = i
+                        break
+            equation = ("".join(equation[:first_paren]) +
+                        "".join(after_paren[:paren_index+1]) +
+                        "**0.5" +
+                        "".join(after_paren[paren_index+1:]))
+            counter += 1
     for char in equation:
         if isVariable(char):
             variable = char
     equation = optimizeEquationForSympy(equation)
     equation = equation.replace(variable, "x")
     result = solve(equation, "x")
+    for i in range(len(result)):
+        try:
+            result[i] = round(float(result[i]), 3)
+        except ValueError:
+            pass
     output = ""
     for i in range(len(result)):
         output += "x_" + str(i+1) + " = " + str(result[i]) + "\n"
@@ -22,4 +46,4 @@ def solveEquation(equation):
     return output
 
 if __name__ == '__main__':
-    print(solveEquation("a = a**0.5"))
+    print(solveEquation("ä = sqrt(ä)"))
