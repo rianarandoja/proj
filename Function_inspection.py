@@ -1,9 +1,16 @@
 from tkinter import *
 from tkinter import ttk
 from math import *
+from Equation_manipulation import optimizeEquationForSympy
 
 def funcInspectArgsHandler(user_args):
-    pass
+    user_args = ''.join(user_args)
+    if (   (user_args.count('y') == 1 or user_args.count('f(x)') == 1) and
+            user_args.count('=') == 1 and
+            user_args.count('x') >= 1):
+        return True
+    return False
+
 
 def funcInspect(raw_equations,
                 text_1="",
@@ -26,12 +33,19 @@ def funcInspect(raw_equations,
      Võimalik, et axis_num ja magnification_level peavad olema võrdsed."""
 
     equations = []
-    for equation in raw_equations:
-        if ',' in equation:
-            for new_equation in equation.split(','):
+    for eq in raw_equations:
+        if ',' in eq:
+            for new_equation in eq.split(','):
                 equations.append(new_equation)
         else:
-            equations.append(equation)
+            equations.append(eq)
+
+    for i in range(len(equations)):
+        equations[i] = optimizeEquationForSympy(equations[i].replace('y', '')
+                                                            .replace('f(x)', '')
+                                                            .replace('=', '') + '= 0')
+        print(equations[i])
+
 
     height_width = 800
 
