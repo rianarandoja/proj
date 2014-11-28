@@ -24,7 +24,6 @@ def funcInspect(raw_equations,
      ja graafiku. Pärast igat suurendust joonistatakse kõik uuesti. Uuesti ei joonistata navigeerides, sellest tulenevalt on
      navigeerimine limiteeritud (jõudlust silmas pidades).
      Akna suuruse muutmine põhjustab koordinaatide arvutamises vigu. Tekstiväljad on teistele funktsioonidele kasutamiseks.
-
      - Väärtus axis_num kalibreerib numbrid teljestiku ja pikslitega. Ta on oluline, et suurendus töötaks.
      - Väärtus magnification_level määrab ära võrrandi suurenduse
      - Väärtused move_to_x ja move_to_y liidetakse pikslitele otsa, mis tagab õigete koordinaadite kuvamise pärast graafiku liigutamist.
@@ -140,11 +139,16 @@ def funcInspect(raw_equations,
                 y = -y*magnification_level  # "-" peegeldab & suurendab graafikut.
                 points.append(y)
 
-                x *= magnification_level  # Fn nimede kuvamine.
-                if -170 < x < 170 and -170 < y < 170 and fn_text_count != 0:  # Tagab tahvlile jäämise.
-                    text = canvas.create_text(x-15, y-10, text= "y = " + equation, font=font, fill=function_line_colors[i])  # Tekstiväli.
-                    canvas.move(text, 200, 200)
-                    fn_text_count = 0  # Igale fn'ile üks nimi.
+                if type(y) == complex:
+                    points.pop()
+                    points.pop()
+                else:
+
+                    x *= magnification_level  # Fn nimede kuvamine.
+                    if -170 < x < 170 and -170 < y < 170 and fn_text_count != 0:  # Tagab tahvlile jäämise.
+                        text = canvas.create_text(x-15, y-10, text= "y = " + equation, font=font, fill=function_line_colors[i])  # Tekstiväli.
+                        canvas.move(text, 200, 200)
+                        fn_text_count = 0  # Igale fn'ile üks nimi.
             if i == len(function_line_colors):  # Failsafe.
                 i = 0
 
