@@ -8,7 +8,8 @@ import Weather
 
 
 def getFunctionWithArgs(user_args):
-    pass
+    if Function_inspection.funcInspectArgsHandler(user_args):
+        return 'Function_inspection.funcInspect'
     return ''
 
 def getFunctionWithComs(user_coms):
@@ -73,7 +74,7 @@ mainframe_st.configure('mainframe.TFrame', background='white')
 mainframe = ttk.Frame(root, style='mainframe.TFrame')
 mainframe.place(x=0, y=0, relwidth=1, relheight=1)
 
-bg_img = PhotoImage(file='C.png')
+bg_img = PhotoImage(file='main_bg.png')
 bg_lbl = Label(mainframe, image=bg_img)
 bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
 
