@@ -7,9 +7,15 @@ import Function_inspection
 import Weather
 
 
-def getFunctionWithArgs(user_args):
-    if Function_inspection.funcInspectArgsHandler(user_args):
+def getFunctionWithArgs(args):
+    if Function_inspection.funcInspectArgsHandler(args):
         return 'Function_inspection.funcInspect'
+    if Weather.weatherArgsHandler(args):
+        global user_args
+        #print('enne user args: ' + str(user_args))  # DB
+        for i in range(len(user_args)): user_args[i] = user_args[i].replace('ilm', '')
+        #print('pärast user args: ' + str(user_args))  # DB
+        return 'Weather.weatherInformation'
     return ''
 
 def getFunctionWithComs(user_coms):
@@ -18,7 +24,6 @@ def getFunctionWithComs(user_coms):
         for i in range(1, len(func)):
             if func[i] in user_coms_str.lower():
                 return func[0]
-    return None
 
 def restoreEntry():
     main_ent_st.configure("EntryStyle.TEntry", fieldbackground="white", foreground="black")
@@ -38,6 +43,7 @@ def incorrectInput():
         eval('root.after(' + str(400*(i+1)) + ', restoreEntry)')
 
 def main(*args):
+    global user_args
     user_args_coms = Parse_input.parseInput(main_ent.get(), '[', ']')
     if user_args_coms == -1:
         # If user input is incorrect
@@ -63,8 +69,9 @@ def main(*args):
 ###########
 
 root = Tk()
-root.title("ReisidAafrikasse")
-root.wm_attributes("-topmost", 1)  # Always of top
+root.title('ReisidAafrikasse')
+root.wm_attributes('-topmost', 1)  # Always of top
+root.wm_attributes('-topmost', 0)  # Always of top
 root.resizable(width=FALSE, height=FALSE)
 root.geometry('345x105')
 
@@ -77,6 +84,9 @@ mainframe.place(x=0, y=0, relwidth=1, relheight=1)
 bg_img = PhotoImage(file='main_bg.png')
 bg_lbl = Label(mainframe, image=bg_img)
 bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
+
+menu_bar = Menu()
+
 
 main_ent_st = ttk.Style()
 # Fimagzen
