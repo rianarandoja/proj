@@ -5,7 +5,16 @@ from tkinter import messagebox
 from urllib.request import urlopen
 
 
-def WeatherInformation(location):
+def weatherArgsHandler(args):
+    args = ''.join(args)
+    if ('ilm' in args and
+        'x' not in args and
+        'y' not in args and
+        '=' not in args):
+        return True
+    return False
+
+def weatherInformation(location):
     # Aken:
     # Fotod eeldavad toplevelit.
     weather_window = Toplevel()
@@ -23,24 +32,24 @@ def WeatherInformation(location):
         base_url.close()
     except:
         messagebox.showinfo(message='Ühendamine Riigi Ilmateenistusega ebaõnnestus. Proovi hiljem uuesti või '
-                                    'kontakteeru oma kohaliku IT osakonnaga! :)', title='Rawr! Feeling angry I am.')
+                                    'kontakteeru oma kohaliku IT osakonnaga! :)', title='Feeling angry I am.')
         print("No internet connection or wrong URL")
         return
 
     # Teeb kasutaja sisendi xml-iga vastavaks.
-    location = location[0]
+    location = ''.join(location).strip()
     location = location.capitalize()
-    if location == "Tartu":
+    if "Tartu" in (location, location[:-1], location[:-2]):
         location = "Tartu-Tõravere"
-    elif location == "Tallinn":
+    elif "Tallinn" in (location, location[:-1], location[:-2]):
         location = "Tallinn-Harku"
-    elif location == "Pärnu":
+    elif "Pärnu" in (location, location[:-1], location[:-2]):
         location = "Pärnu-Sauga"
-    elif location == "Narva":
+    elif "Narva" in (location, location[:-1], location[:-2]):
         location = "Narva-Jõesuu"
-    elif location == "Türi":
+    elif "Türi" in (location, location[:-1], location[:-2]):
         location = "Türi-Alliku"
-    elif location == "Rannu":
+    elif "Rannu" in (location, location[:-1], location[:-2]):
         location = "Rannu-Jõesuu"
 
     # Käib kõik märksõnad "station" läbi.
@@ -49,7 +58,7 @@ def WeatherInformation(location):
 
     for weather in root.findall('station'):
         station_name = weather.find("name").text
-        if station_name == location:
+        if station_name == location or station_name == location[:-1]:
             station_name_exists = True
             # Määrab dünaamilise akna tausta:
             weather_window_background = str(weather.find("phenomenon").text)
@@ -57,7 +66,7 @@ def WeatherInformation(location):
                 background_img = PhotoImage(file=".\\Photos_for_weather\\" + str(weather_window_background) + ".gif")
             except:
                 background_img = PhotoImage(file=".\\Photos_for_weather\\Clear.gif")
-                print("Background image not found.")
+                print("Background image not found: " + station_name)
             # Teksti taust:
             canvas.create_image(0, 0, image=background_img, anchor="nw")
             text_background = PhotoImage(file=".\\Photos_for_weather\\text_background.png")
