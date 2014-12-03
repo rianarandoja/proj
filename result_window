@@ -1,0 +1,50 @@
+from tkinter import *
+import tkinter.ttk as ttk
+
+def showResult(result, user_input="user input", isEquation=False):
+    root = Tk()
+    root.title("Aafrika")
+
+    if "või" in result:
+        result = result.split("või")\
+
+    if "\n" in result:
+        result = result.split("\n")
+
+    y_scrollbar = Scrollbar(root)
+    y_scrollbar.pack(side=RIGHT, fill=Y)
+
+    listbox = Listbox(root, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=7, width=50,
+                      selectbackground="gold2", activestyle="none")
+    listbox.pack(side=LEFT, fill=BOTH, expand=1)
+
+    y_scrollbar.config(command=listbox.yview)
+
+    # kuidagi peaks funktsioon teada saama, millega tegu on, et ta ühikute teisendamisel seda nuppu ei kuvaks
+
+    button = ttk.Button(root, text="√Kuva funktsioon!", width=17)  # command=
+    button.place(x=185, y=13)
+
+    #button_2 = ttk.Button(root, text="√Joonista!", width=10)  # command=
+    #button_2.place(x=217, y=80)
+
+    listbox.insert(0, "")
+    listbox.insert(1, " "*30 + user_input)
+    listbox.insert(2, "")
+
+    if isinstance(result, str):
+        listbox.insert(END, str("       •   " + result))
+    else:
+        for item in result:
+            if item != "":
+                listbox.insert(END, str("      •   " + item.strip()))
+    root.mainloop()
+
+
+#showResult("3.52 pints")
+#showResult(['2 < x < 4 ', " 5 < x < 7"])
+#showResult(["x < 7"], "kasutaja sisend", True)
+#showResult(["x_1=0", "x_2=2", "nullkohad", "haripunkt", "kumeruspiirkond", "ä_2 = 1.0"], "x**2-2*x=0")
+#showResult(['Nullkohad: x_1 = 0.0,  x_2 = 2.0', 'Positiivsuspiirkond: x < 0 ,  x > 2',
+            #'Negatiivsuspiirkond: 0 < x < 2', 'Ekstreemumid: x_1 = 1.0', 'Kasvamisvahemik: x > 1',
+            #'Kahanemisvahemik: x < 1'], "x**2-2*x=0")
