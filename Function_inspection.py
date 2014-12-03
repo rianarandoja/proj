@@ -43,6 +43,7 @@ def funcInspect(raw_equations,
         equations[i] = optimizeEquationForSympy(equations[i].replace('y', '')
                                                             .replace('f(x)', '')
                                                             .replace('=', '') + '= 0')
+        equations[i] = equations[i][:-2]
         print(equations[i])
 
 
