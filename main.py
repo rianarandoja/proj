@@ -5,17 +5,28 @@ import Function_keywords
 import Venn_diagram
 import Function_inspection
 import Weather
+import URL_open
 
+
+dict_et_en = {}
+dict_en_et = {}
 
 def getFunctionWithArgs(args):
     if Function_inspection.funcInspectArgsHandler(args):
+        # function?
         return 'Function_inspection.funcInspect'
     if Weather.weatherArgsHandler(args):
-        global user_args
-        #print('enne user args: ' + str(user_args))  # DB
-        for i in range(len(user_args)): user_args[i] = user_args[i].replace('ilm', '')
-        #print('pärast user args: ' + str(user_args))  # DB
+        # weather request?
         return 'Weather.weatherInformation'
+    if URL_open.googleSearchArgsHandler(args): # add to specialUrl...
+        # Google search?
+        return 'URL_open.googleSearch'
+    if URL_open.openUrlArgsHandler(args):
+        # URL?
+        return 'URL_open.openUrl'
+    if URL_open.openSpecialUrlArgsHandler(args) is not None:
+        # special url?
+        return URL_open.openSpecialUrlArgsHandler(args)
     return ''
 
 def getFunctionWithComs(user_coms):
@@ -70,8 +81,8 @@ def main(*args):
 
 root = Tk()
 root.title('ReisidAafrikasse')
-root.wm_attributes('-topmost', 1)  # Always of top
-root.wm_attributes('-topmost', 0)  # Always of top
+root.wm_attributes('-topmost', 1)  # Always of top on
+#root.wm_attributes('-topmost', 0)  # Always of top off
 root.resizable(width=FALSE, height=FALSE)
 root.geometry('345x105')
 
@@ -85,7 +96,7 @@ bg_img = PhotoImage(file='main_bg.png')
 bg_lbl = Label(mainframe, image=bg_img)
 bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
 
-menu_bar = Menu()
+# Menu for always on top here---
 
 
 main_ent_st = ttk.Style()
