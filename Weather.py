@@ -22,6 +22,9 @@ def weatherInformation(location):
     weather_window.resizable(width=FALSE, height=FALSE)
     canvas = Canvas(weather_window, width=400, height=260)
 
+    for i in range(len(location)):
+        location[i] = location[i].replace('ilm', '')
+
     try:
         # Avab veebilehelt xml:
         base_url = urlopen("http://www.ilmateenistus.ee/ilma_andmed/xml/observations.php")
