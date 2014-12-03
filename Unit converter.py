@@ -69,10 +69,11 @@ def convertUnits(command):
     except TypeError:
         return -1
 
-print(convertUnits("2 liters to pints"))
-print(convertUnits("2 pints in liters"))
-print(convertUnits("40 m in pints"))
-print(convertUnits("2 kg in ounces"))
-print(convertUnits("2 l to dl"))
-print(convertUnits("2 l -> dl"))
-print(convertUnits("2 pints -> gallons"))
+if __name__ == '__main__':
+    print(convertUnits("2 liters to pints"))
+    print(convertUnits("2 pints in liters"))
+    print(convertUnits("40 m in pints"))
+    print(convertUnits("2 kg in ounces"))
+    print(convertUnits("2 l to dl"))
+    print(convertUnits("2 l -> dl"))
+    print(convertUnits("2 pints -> gallons"))
