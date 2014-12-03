@@ -72,7 +72,8 @@ def getAllToLeftSide(expr):
 
 def optimizeEquationForSympy(equation):
     equation = getMissingMultiplic(equation)
-    equation = getAllToLeftSide(equation)
+    if "=" in equation:
+        equation = getAllToLeftSide(equation)
     return equation
 
 if __name__ == '__main__':
