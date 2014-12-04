@@ -133,7 +133,7 @@ def funcInspect(raw_equations,
                     points.append(-x)  # "-" peegeldab graafikut.
                     x = -(x/magnification_level)
                     y = eval(equation)
-                except (ZeroDivisionError, ValueError) as _:
+                except (ZeroDivisionError, ValueError, TypeError) as _:
                     points.pop()
                     continue
 
@@ -152,11 +152,11 @@ def funcInspect(raw_equations,
                         fn_text_count = 0  # Igale fn'ile üks nimi.
             if i == len(function_line_colors):  # Failsafe.
                 i = 0
-
-            function_line = canvas.create_line(points, fill=function_line_colors[i], width=2)  # Loob graafiku
-            i += 1
-            canvas.move(function_line, 200, 200)  # Liigutab f-n õigesse kohta
-            points = []  # Kustutab koordinaadid
+            if points != []:
+                function_line = canvas.create_line(points, fill=function_line_colors[i], width=2)  # Loob graafiku
+                i += 1
+                canvas.move(function_line, 200, 200)  # Liigutab f-n õigesse kohta
+                points = []  # Kustutab koordinaadid
         canvas.pack()
 
     def zoom_out():
