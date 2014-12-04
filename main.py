@@ -2,32 +2,34 @@ from tkinter import *
 from tkinter import ttk
 import Parse_input
 import Function_keywords
-import Venn_diagram
 import Function_inspection
 import Weather
 import URL_open
+import Equation_solve
+import Calculator
 
 
 dict_et_en = {}
 dict_en_et = {}
 
 def getFunctionWithArgs(args):
-    if Function_inspection.funcInspectArgsHandler(args):
-        # function?
-        return 'Function_inspection.funcInspect'
+    spec_url = URL_open.openSpecialUrlArgsHandler(args)
+    if spec_url is not None:
+        # special url?
+        return spec_url
     if Weather.weatherArgsHandler(args):
         # weather request?
         return 'Weather.weatherInformation'
-    if URL_open.googleSearchArgsHandler(args): # add to specialUrl...
-        # Google search?
-        return 'URL_open.googleSearch'
     if URL_open.openUrlArgsHandler(args):
         # URL?
         return 'URL_open.openUrl'
-    if URL_open.openSpecialUrlArgsHandler(args) is not None:
-        # special url?
-        return URL_open.openSpecialUrlArgsHandler(args)
-    return ''
+    if Function_inspection.funcInspectArgsHandler(args):
+        # function?
+        return 'Function_inspection.funcInspect'
+    if Equation_solve.solveEquationArgsHandler(args):
+        # equation?
+        return 'Equation_solve.solveEquation'
+    return 'Calculator.calculator'
 
 def getFunctionWithComs(user_coms):
     user_coms_str = ''.join(user_coms)
@@ -74,7 +76,10 @@ def main(*args):
             corr_func_name = getFunctionWithArgs(user_args)
 
         corr_func = corr_func_name + '(user_args)'
-        eval(corr_func)
+        try:
+            eval(corr_func)
+        except:
+            incorrectInput()
 
 
 ###########
