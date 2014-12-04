@@ -24,6 +24,8 @@ def writeImportToMain(new_filename):
         if main_file[i] == '\n':
             pos = i
             break
+    else:
+        raise AssertionError('Could not find the end of initial import statements in main.py.')
 
     main_file = main_file[:pos] + new_entry + main_file[pos:]
     fw = open('main.py', encoding='utf-8', mode='w')
@@ -45,7 +47,8 @@ print("This script adds internal Python functions to ReisidAafrikasse. Before ad
       "all tests (print(yourFunction('test_info')) from the function file and make sure the\n"
       "function accepts arguments as list. For example if the function takes 2 arguments, make\n"
       "sure it takes a list as an argument and then isolate the two args from list:\n"
-      "arg1, arg2 = lst[0], lst[1].")
+      "arg1, arg2 = lst[0], lst[1]. If the function takes 1 argument, it is recommended to use\n"
+      "arg1 = ''.join(lst).")
 func_filename = input('Name of .py file that contains the new function: ')
 func_name = input('Name of the new function: ')
 
@@ -66,3 +69,5 @@ while True:
 
 writeToFuncList(func_filename, func_name, keywords)
 writeImportToMain(func_filename)
+
+print('Import successful. Changes will take effect after restarting main.py.')
