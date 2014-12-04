@@ -11,26 +11,23 @@ def openUrlArgsHandler(args):
             return True
     return False
 
-def googleSearchArgsHandler(args):
-    args_lst = ''.join(args).strip().lower().split()
-    if args_lst[0] == 'g' or args_lst[0] == 'google':
-        return True
-    return False
-
 def openSpecialUrlArgsHandler(keyword):
     keyword_str = ''.join(keyword).strip().lower()
     keyword_lst = keyword_str.split()
     keyword_str_nospace = keyword_str.replace(' ', '')
-    if keyword_lst[0] == 'g' or keyword_lst[0] == 'google':
-        return 'URL_open.openSpec'
+    main_kw = keyword_lst[0]
+    if main_kw == 'g' or main_kw == 'google':
+        return 'URL_open.openSpecGoogle'
+    if main_kw == 'yt' or main_kw == 'youtube':
+        return 'URL_open.openSpecYoutube'
+    if main_kw == 'imdb' or main_kw == 'movie':
+        return 'URL_open.openSpecImdb'
+    if main_kw == 'lf' or main_kw == 'lastfm' or main_kw == 'music':
+        return 'URL_open.openSpecLastfm'
     if (keyword_str_nospace == 'utmoodle' or
         keyword_str_nospace == 'moodleut' or
         keyword_str_nospace == 'moodle'):
         return 'URL_open.openSpecUtmoodle'
-    if keyword_str.split()[0] == 'imdb':
-        return 'URL_open.openSpecImdb'
-    if keyword_lst[0] == 'yt' or keyword_lst[0] == 'youtube':
-        return 'URL_open.openSpecYoutube'
 
 def openUrl(raw_url):
     url = ''
@@ -41,7 +38,7 @@ def openUrl(raw_url):
     url += raw_url_str
     webbrowser.open_new_tab(url)
 
-def googleSearch(raw_query):
+def openSpecGoogle(raw_query):
     query_lst = ''.join(raw_query).split()
     query = ' '.join(query_lst[1:])
     webbrowser.open_new_tab('http://www.google.com/search?q=' + query)
@@ -49,17 +46,26 @@ def googleSearch(raw_query):
 def openSpecUtmoodle(*args):
     webbrowser.open_new_tab('https://moodle.ut.ee/login/index.php')
 
-def openSpecImdb(query):
-    query_str = ''.join(query).lower().replace('imdb', '').strip()
-    if query_str:
-        webbrowser.open_new_tab('http://www.imdb.com/find?ref_=nv_sr_fn&q=' + query_str.replace(' ', '+') + '&s=all')
+def openSpecImdb(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://www.imdb.com/find?ref_=nv_sr_fn&q=' + query + '&s=all')
     else:
         webbrowser.open_new_tab('http://www.imdb.com/')
 
-def openSpecYoutube(query):
-    query_lst = ''.join(query).strip().lower().split()
+def openSpecYoutube(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
     if len(query_lst) > 1:
         query = '+'.join(query_lst[1:])
         webbrowser.open_new_tab('https://www.youtube.com/results?search_query=' + query)
     else:
         webbrowser.open_new_tab('https://www.youtube.com/')
+
+def openSpecLastfm(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://www.last.fm/search?q=' + query + '&type=all')
+    else:
+        webbrowser.open_new_tab('http://www.last.fm/')
