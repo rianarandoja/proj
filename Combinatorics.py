@@ -1,5 +1,6 @@
 from sympy import factorial
 
+# Calculator arvutab faktoriaali ka, miks seda vaja?
 def getFact(fact):
     return factorial(fact.replace("!", ""))
 
@@ -14,7 +15,3 @@ def solvePermutations(permutation):
     r = int(permutation[permutation.index("V")+1:].strip())
     result = factorial(n)/factorial(n-r)
     return result
-
-#print(getFact("7!"))
-#print(solveCombinations("3C 2"))
-#print(solvePermutations("4V4"))
