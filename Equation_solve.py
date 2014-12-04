@@ -6,7 +6,13 @@ from sympy import symbols, solve
 
 x = symbols("x")
 
+def solveEquationArgsHandler(args):
+    if '=' in ''.join(args):
+        return True
+    return False
+
 def solveEquation(equation):
+    equation = ''.join(equation)
     if "sqrt" in equation:
         counter = 0
         sqrt_counter = equation.count("sqrt")
@@ -32,18 +38,19 @@ def solveEquation(equation):
             variable = char
     equation = optimizeEquationForSympy(equation)
     equation = equation.replace(variable, "x")
-    result = solve(equation, "x")
-    for i in range(len(result)):
+    results = solve(equation, "x")
+    for i in range(len(results)):
         try:
-            result[i] = round(float(result[i]), 3)
+            results[i] = round(float(results[i]), 3)
         except ValueError:
-            pass
+            continue
     output = ""
-    for i in range(len(result)):
-        output += "x_" + str(i+1) + " = " + str(result[i]) + "\n"
+    for i, result in enumerate(results):
+        output += "x_%i = %s\n" %(i+1, str(result))
+
     output = (output.replace("x", variable)
                     .replace("I", "i"))
     return output
 
 if __name__ == '__main__':
-    print(solveEquation("ä = sqrt(ä)"))
+    print(solveEquation("1 = sin(x)"))
