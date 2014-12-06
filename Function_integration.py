@@ -1,9 +1,11 @@
 from Equation_manipulation import *
 from sympy import integrate, symbols
+from Simple_result_window import resultWindow
 
 x = symbols('x')
 
 def integrateFunction(expression):
+    expression = "".join(expression)
     d_index = expression.index("d")
     integral = getMissingMultiplic((expression[:d_index]).strip())
     variable = expression[d_index+1]
@@ -39,12 +41,13 @@ def integrateFunction(expression):
     try:
         result = round(float(result), 2)
     except ValueError:
-        result = result
+        pass
+    resultWindow(result, expression)
     return result
 
 if __name__ == '__main__':
-    print(integrateFunction("2y dy from 3 to 5"))
-    print(integrateFunction("(x**2 + 2x)dx  3st 5ni"))
-    print(integrateFunction("2x dx (2,9)"))
-    print(integrateFunction("2y dy"))
-    print(integrateFunction("(x**2 + 2x)dx  3.4st 5ni"))
+    print(integrateFunction(["2y dy from 3 to 5"]))
+    # print(integrateFunction("(x**2 + 2x)dx  3st 5ni"))
+    # print(integrateFunction("2x dx (2,9)"))
+    # print(integrateFunction("2y dy"))
+    # print(integrateFunction("(x**2 + 2x)dx  3.4st 5ni"))
