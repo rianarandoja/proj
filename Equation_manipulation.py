@@ -5,8 +5,8 @@
 
 def isVariable(variable):
     # returns True, if the symbol is in list of variables
-    list_of_variables = {'q', 'w', 'y', 'u', 'p', 'ü', 'õ', 'd', 'f', 'j', 'k','ö', 
-                         'ä', 'z', 'x', 'v', 'b', 'm', 'Q', 'W', 'Y', 'U', 'P','Ü', 
+    list_of_variables = {'q', 'w', 'y', 'u', 'p', 'ü', 'õ', 'd', 'f', 'j', 'k', 'ö',
+                         'ä', 'z', 'x', 'v', 'b', 'm', 'Q', 'W', 'Y', 'U', 'P', 'Ü',
                          'Õ', 'D', 'F', 'J', 'K', 'Ö', 'Ä', 'Z', 'X', 'V', 'B', 'M'}
     if variable in list_of_variables: return True
     return False
@@ -51,9 +51,14 @@ def getAllToLeftSide(expr):
     expr = list(expr.replace("|", "abs("))
     if expr.count('(') != expr.count(')'):
         return -1
-    equal_sign_index = expr.index("=")
-    left_side = "".join(expr[:equal_sign_index])
-    right_side = expr[equal_sign_index+1:]
+    if "=" in expr:
+        sign_index = expr.index("=")
+    elif "<" in expr:
+        sign_index = expr.index("<")
+    else:
+        sign_index = expr.index(">")
+    left_side = "".join(expr[:sign_index])
+    right_side = expr[sign_index+1:]
     counter_parens = 0
     for i in range(len(right_side)):
         if right_side[i] == "(":
@@ -70,13 +75,44 @@ def getAllToLeftSide(expr):
         right_side = "-" + right_side
     return left_side + right_side
 
+def replaceSqrt(expr):
+    counter = 0
+    sqrt_counter = expr.count("sqrt")
+    while sqrt_counter > counter:
+            first_paren = expr.index("sqrt")
+            after_paren = expr[first_paren+4:]
+            counter_parens = 0
+            for i in range(len(after_paren)):
+                if after_paren[i] == "(":
+                    counter_parens += 1
+                elif after_paren[i] == ")":
+                    counter_parens -= 1
+                    if counter_parens == 0:
+                        paren_index = i
+                        break
+            expr = ("".join(expr[:first_paren]) +
+                        "".join(after_paren[:paren_index+1]) +
+                        "**0.5" +
+                        "".join(after_paren[paren_index+1:]))
+            counter += 1
+    return expr
+
 def optimizeEquationForSympy(equation):
     equation = getMissingMultiplic(equation)
     if "=" in equation:
         equation = getAllToLeftSide(equation)
+    elif "<" in equation:
+        equation = getAllToLeftSide(equation) + " < 0"
+    elif ">" in equation:
+        equation = getAllToLeftSide(equation) + " > 0"
+    if "sqrt" in equation:
+        equation = replaceSqrt(equation)
     return equation
+
+
 
 if __name__ == '__main__':
     print(optimizeEquationForSympy('3x + 7 = 6y - p**(-4)'))
     print(optimizeEquationForSympy("4-7=abs(3-2)+abs(4-7)-2(+3(4-z))"))
     print(optimizeEquationForSympy("x-7+|x-2+2|=+|4-7| + |x+6|"))
+    print(optimizeEquationForSympy("(x-4)(5+x)=0"))
