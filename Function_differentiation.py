@@ -1,11 +1,12 @@
 # coding=utf-8
 from Equation_manipulation import isVariable, getMissingMultiplic
 from sympy import symbols, diff
-
+from Simple_result_window import resultWindow
 
 x = symbols('x')
 
-def diffFunction(expr):
+def solveDiff(expr):
+    expr = "".join(expr)
     for char in expr:
         if isVariable(char):
             variable = char
@@ -15,7 +16,10 @@ def diffFunction(expr):
     result = result.replace('x', variable)
     return result
 
+def diffFunction(user_input):
+    user_input = "".join(user_input)
+    result = solveDiff(user_input)
+    resultWindow(result, user_input)
+
 if __name__ == '__main__':
-    print(diffFunction("x**2"))
-    print(diffFunction("2q"))
-    print(diffFunction("sin(x)"))
+    print(diffFunction(["sin(x)"]))
