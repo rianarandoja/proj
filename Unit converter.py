@@ -1,4 +1,5 @@
 from sympy.physics.units import *
+from Simple_result_window import resultWindow
 
 added_units = ({"pints": "liters=0.568261", "gallon": "liters=4.54609",
                 "pound": "kg=0.453592", "ounce": "kg=0.0283495", "stone": "kg=6.35029",
@@ -11,6 +12,7 @@ k_list = ["Kelvin", "kelvin", "K"]
 c_list = ["Celsius", "celsius", "C"]
 
 def convertUnits(command):
+    command = "".join(command)
     if " to " in command:
         separator_index = command.index(" to ")
         to_unit = command[separator_index+3:].strip()
@@ -20,6 +22,8 @@ def convertUnits(command):
     elif "->" in command:
         separator_index = command.index("->")
         to_unit = command[separator_index+2:].strip()
+    else:
+        return -1
     convert_from = (command[:separator_index]).strip()
     for i in range(len(convert_from)):
         if convert_from[i].isdigit() and convert_from[i+1] != "." and not convert_from[i+1].isdigit():
@@ -65,15 +69,17 @@ def convertUnits(command):
                 else:
                     return -1
     try:
-        return str(round(float(answer), 2)) + " " + to_unit
+        result = str(round(float(answer), 2)) + " " + to_unit
     except TypeError:
         return -1
+    resultWindow(result, command)
+
 
 if __name__ == '__main__':
-    print(convertUnits("2 liters to pints"))
-    print(convertUnits("2 pints in liters"))
-    print(convertUnits("40 m in pints"))
-    print(convertUnits("2 kg in ounces"))
-    print(convertUnits("2 l to dl"))
-    print(convertUnits("2 l -> dl"))
-    print(convertUnits("2 pints -> gallons"))
+    print(convertUnits(["2 liters to pints"]))
+    #print(convertUnits("2 pints liters"))
+    # print(convertUnits("40 m in pints"))
+    # print(convertUnits("2 kg in ounces"))
+    # print(convertUnits("2 l to dl"))
+    # print(convertUnits("2 l -> dl"))
+    # print(convertUnits("2 pints -> gallons"))
