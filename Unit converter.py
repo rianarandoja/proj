@@ -30,10 +30,8 @@ def convertUnits(command):
             convertible = float(convert_from[:i+1].strip())
             from_unit = convert_from[i+1:].strip()
             break
-    if find_unit(from_unit) != [] and find_unit(to_unit) != []:
-        # SI units
-        answer = convertible * eval(from_unit) / eval(to_unit)
-    else:
+
+    if from_unit in c_list or from_unit in k_list or from_unit in f_list:
         # temperature
         if from_unit in f_list:
             if to_unit in c_list:
@@ -50,36 +48,47 @@ def convertUnits(command):
                 answer = convertible * (9/5) + 32
             elif to_unit in k_list:
                 answer = convertible + 273.15
+
+    elif (find_unit(from_unit) != [] and find_unit(to_unit) != [] and from_unit != ("pounds" or "pound")
+          and to_unit != ("pounds" or "pound")):
+            # SI units
+            answer = convertible * eval(from_unit) / eval(to_unit)
+
+    else:
+        # other self-added units
+        if find_unit(from_unit) != []:
+            unit = added_units[to_unit].split("=")[0]
+            konstant = added_units[to_unit].split("=")[1]
+            number = float(convertible)/float(konstant)
+            answer = number * eval(from_unit) / eval(unit)
+
+        elif find_unit(to_unit) != []:
+            unit = added_units[from_unit].split("=")[0]
+            konstant = added_units[from_unit].split("=")[1]
+            number = float(convertible)*float(konstant)
+            answer = number * eval(unit) / eval(to_unit)
+
         else:
-            # other self-added units
-            if find_unit(from_unit) != []:
-                unit = added_units[to_unit].split("=")[0]
-                konstant = added_units[to_unit].split("=")[1]
-                number = float(convertible)/float(konstant)
-                answer = number * eval(from_unit) / eval(unit)
-            elif find_unit(to_unit) != []:
-                unit = added_units[from_unit].split("=")[0]
-                konstant = added_units[from_unit].split("=")[1]
-                number = float(convertible)/float(konstant)
-                answer = number * eval(unit) / eval(to_unit)
-            else:
-                if added_units[from_unit].split("=")[0] == added_units[to_unit].split("=")[0]:
-                    answer = ((float(convertible)*float(added_units[from_unit].split("=")[1])) /
+            if added_units[from_unit].split("=")[0] == added_units[to_unit].split("=")[0]:
+                answer = ((float(convertible)*float(added_units[from_unit].split("=")[1])) /
                                                         float(added_units[to_unit].split("=")[1]))
-                else:
-                    return -1
+            else:
+                return -1
+
     try:
         result = str(round(float(answer), 2)) + " " + to_unit
     except TypeError:
         return -1
     resultWindow(result, command)
+    return result
 
 
 if __name__ == '__main__':
-    print(convertUnits(["2 liters to pints"]))
-    #print(convertUnits("2 pints liters"))
+    # print(convertUnits(["2 liters to pints"]))
+    print(convertUnits("2 pints to liters"))
     # print(convertUnits("40 m in pints"))
     # print(convertUnits("2 kg in ounces"))
-    # print(convertUnits("2 l to dl"))
-    # print(convertUnits("2 l -> dl"))
-    # print(convertUnits("2 pints -> gallons"))
+    # print(convertUnits("1 kg to pounds"))
+    # print(convertUnits("-40C to F"))
+    print(convertUnits("0 F to K"))
+    # print(convertUnits("33K to C"))
