@@ -52,9 +52,9 @@ def Calc(raw_expr):
 
     result = calculator(raw_expr)
 
-    root = Tk()
-    root.title("Aafrika")
-    listbox = Listbox(root, selectmode=MULTIPLE, height=6, width=50, selectbackground="gold2", activestyle="none")
+    calc_win = Tk()
+    calc_win.title("Aafrika")
+    listbox = Listbox(calc_win, selectmode=MULTIPLE, height=6, width=50, selectbackground="gold2", activestyle="none")
     listbox.pack(side=LEFT, fill=BOTH, expand=1)
 
     listbox.insert(0, "")
@@ -71,7 +71,7 @@ def Calc(raw_expr):
 
     listbox.insert(END, "")
 
-    root.mainloop()
+    calc_win.mainloop()
 
 
 if __name__ == '__main__':
