@@ -2,10 +2,10 @@ from tkinter import *
 
 def resultWindow(result, user_input):
 
-    root = Tk()
-    root.title("Aafrika")
+    s_res_win = Tk()
+    s_res_win.title("Aafrika")
 
-    listbox = Listbox(root, selectmode=MULTIPLE, height=5, width=50, selectbackground="gold2", activestyle="none")
+    listbox = Listbox(s_res_win, selectmode=MULTIPLE, height=5, width=50, selectbackground="gold2", activestyle="none")
     listbox.pack(side=LEFT, fill=BOTH, expand=1)
 
     listbox.insert(0, "")
@@ -21,4 +21,4 @@ def resultWindow(result, user_input):
 
     listbox.insert(END, "")
 
-    root.mainloop()
+    s_res_win.mainloop()
