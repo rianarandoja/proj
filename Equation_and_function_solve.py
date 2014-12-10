@@ -166,7 +166,7 @@ def Equation(user_input):
 
     y_scrollbar.config(command=listbox.yview)
 
-    if solveFunction(optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")) == -1:
+    if solveFunction(optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")) == -1 or result == [""]:
         button = (ttk.Button(root, text="√Kuva funktsioon!", width=17,
                              command=lambda: Function(user_input), state=DISABLED))
     else:
@@ -181,10 +181,10 @@ def Equation(user_input):
     listbox.insert(1, " "*20 + user_input)
     listbox.insert(2, "")
 
-    if result == []:
+    if result == ([] or [""]):
         listbox.insert(END, " "*15 + "Sorry!")
         listbox.insert(END, " "*10 + "Ma veel ei oska ")
-        listbox.insert(END, " "*10 + "imaginaararvudega arvutada!")
+        listbox.insert(END, " "*10 + "imaginaarühikutega arvutada!")
 
     for item in result:
         if item != "":
