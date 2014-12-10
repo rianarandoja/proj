@@ -48,7 +48,7 @@ y_scrollbar.config(command=listbox.yview)
 
 def read_in(database, dict_1, dict_2):
     global dict_flag
-    if database == "en_et_words.txt":
+    if database == ".\\Words_for_translator\\en_et_words.txt":
         f = open(database, encoding="UTF8")
     else:
         f = open(database, encoding="ISO-8859-1")
@@ -77,11 +77,11 @@ if not dict_flag:
     dict_en_it, dict_it_en = {}, {}
     dict_en_es, dict_es_en = {}, {}
 
-    dict_en_et, dict_et_en = read_in("en_et_words.txt", dict_en_et, dict_et_en)
-    dict_en_de, dict_de_en = read_in("en_de_words.txt", dict_en_de, dict_de_en)
-    dict_en_fr, dict_fr_en = read_in("en_fr_words.txt", dict_en_fr, dict_fr_en)
-    dict_en_it, dict_it_en = read_in("en_it_words.txt", dict_en_it, dict_it_en)
-    dict_en_es, dict_es_en = read_in("en_es_words.txt", dict_en_es, dict_es_en)
+    dict_en_et, dict_et_en = read_in(".\\Words_for_translator\\en_et_words.txt", dict_en_et, dict_et_en)
+    dict_en_de, dict_de_en = read_in(".\\Words_for_translator\\en_de_words.txt", dict_en_de, dict_de_en)
+    dict_en_fr, dict_fr_en = read_in(".\\Words_for_translator\\en_fr_words.txt", dict_en_fr, dict_fr_en)
+    dict_en_it, dict_it_en = read_in(".\\Words_for_translator\\en_it_words.txt", dict_en_it, dict_it_en)
+    dict_en_es, dict_es_en = read_in(".\\Words_for_translator\\en_es_words.txt", dict_en_es, dict_es_en)
 
     et, de, es, fr, it = dict_en_et, dict_en_de, dict_en_es, dict_en_fr, dict_en_it
 
