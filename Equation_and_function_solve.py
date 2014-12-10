@@ -25,7 +25,7 @@ def solveEquation(equation):
     for i in range(len(results)):
         try:
             results[i] = round(float(results[i]), 3)
-        except ValueError:
+        except (ValueError, TypeError) as e:
             continue
     output = ""
     for i, result in enumerate(results):
@@ -35,21 +35,31 @@ def solveEquation(equation):
                     .replace("I", "i"))
 
     output = output.strip().split("\n")
+    to_remove = []
+    for el in output:
+        if "i" in el:
+            to_remove.append(el)
+    for el in to_remove:
+        output.remove(el)
     return output
 
 def solveFunction(function):
     function = "".join(function)
     output = []
     nullkohad = "Nullkohad: " + " ,  ".join(solveEquation(function)).strip().strip(",")
-    output.append(nullkohad)
+    if nullkohad[-1] != " ":
+        output.append(nullkohad)
     try:
         positiivsuspiirkond = "Positiivsuspiirkond: " + " , ".join(solveInequality(str(function + "> 0")))
         negatiivsuspiirkond = "Negatiivsuspiirkond: " + " , ".join(solveInequality(str(function + "< 0")))
         output.append(positiivsuspiirkond)
         output.append(negatiivsuspiirkond)
-    except (PolynomialError, NotImplementedError) as e:
+    except (PolynomialError, NotImplementedError, TypeError) as e:
         pass
-    ekstreemumid = solveEquation(solveDiff(function))
+    try:
+        ekstreemumid = solveEquation(solveDiff(function))
+    except IndexError:
+        ekstreemumid = []
     if ekstreemumid != []:
         if len(ekstreemumid) > 1:
             x_1 = round(float(ekstreemumid[0][6:]), 2)
@@ -69,14 +79,14 @@ def solveFunction(function):
                 ekstreemumid = ("Ekstreemumpunkt (" + "".join(ekstreemumid[0][6:]) + ", " +
                                 str(sympify(function.replace("x", (ekstreemumid[0][5:].strip(")")))).evalf(2)) + ")")
                 output.append(ekstreemumid)
-            except SympifyError:
+            except (SympifyError, AttributeError) as e:
                 pass
     try:
         kasvamisvahemik = "Kasvamisvahemik: " + " ,  ".join(solveInequality(str(solveDiff(function) + "> 0")))
         kahanemisvahemik = "Kahanemisvahemik: " + " ,  ".join(solveInequality(str(solveDiff(function) + "< 0")))
         output.append(kahanemisvahemik)
         output.append(kasvamisvahemik)
-    except (PolynomialError, NotImplementedError) as e:
+    except (PolynomialError, NotImplementedError, TypeError) as e:
         pass
     try:
         käänukohad = "Käänukohad: " + " ,  ".join(solveEquation(solveDiff(solveDiff(function))))
@@ -87,7 +97,7 @@ def solveFunction(function):
         output.append(käänukohad)
         output.append(kumerusvahemik)
         output.append(nõgususvahemik)
-    except (UnboundLocalError, PolynomialError, NotImplementedError) as e:
+    except (UnboundLocalError, PolynomialError, NotImplementedError, TypeError) as e:
         pass
     return output
 
@@ -171,6 +181,11 @@ def Equation(user_input):
     listbox.insert(1, " "*20 + user_input)
     listbox.insert(2, "")
 
+    if result == []:
+        listbox.insert(END, " "*15 + "Sorry!")
+        listbox.insert(END, " "*10 + "Ma veel ei oska ")
+        listbox.insert(END, " "*10 + "imaginaararvudega arvutada!")
+
     for item in result:
         if item != "":
             listbox.insert(END, str("           •   " + item.strip()))
@@ -182,6 +197,6 @@ def Equation(user_input):
 if __name__ == '__main__':
     Function(["y=(x-4)(5+x)(4-x)"])
     # Equation(["(x-4)(5+x)(4-x)=0"])
-    # Equation("x**0.5-1=0")
     Equation("(sin(x))**2=1")
-    Equation("abs(x)=1")
+    Equation("sqrt(x) + sqrt(2x) = 2")
+    Equation("sqrt(x) - x = 2")
