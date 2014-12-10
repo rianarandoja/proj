@@ -4,13 +4,13 @@ from tkinter import *
 x = symbols("x")
 
 def InEqResultWindow(result, user_input="user input"):
-    root = Tk()
-    root.title("Aafrika")
+    inEq_win = Tk()
+    inEq_win.title("Aafrika")
 
-    y_scrollbar = Scrollbar(root)
+    y_scrollbar = Scrollbar(inEq_win)
     y_scrollbar.pack(side=RIGHT, fill=Y)
 
-    listbox = Listbox(root, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=6, width=50,
+    listbox = Listbox(inEq_win, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=6, width=50,
                       selectbackground="gold2", activestyle="none")
     listbox.pack(side=LEFT, fill=BOTH, expand=1)
 
@@ -24,7 +24,7 @@ def InEqResultWindow(result, user_input="user input"):
         if item != "":
             listbox.insert(END, str("           •   " + item.strip()))
 
-    root.mainloop()
+    inEq_win.mainloop()
 
 def solveInequality(inequality):
     inequality = "".join(inequality)
