@@ -114,13 +114,13 @@ def Function(user_input):
     if result == -1:
         return -1
 
-    root = Tk()
-    root.title("Aafrika")
+    function_win = Tk()
+    function_win.title("Aafrika")
 
-    y_scrollbar = Scrollbar(root)
+    y_scrollbar = Scrollbar(function_win)
     y_scrollbar.pack(side=RIGHT, fill=Y)
 
-    listbox = Listbox(root, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=7, width=50,
+    listbox = Listbox(function_win, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=7, width=50,
                       selectbackground="gold2", activestyle="none")
     listbox.pack(side=LEFT, fill=BOTH, expand=1)
 
@@ -128,7 +128,7 @@ def Function(user_input):
 
     draw_function_input = ["y=" + optimized_result]
 
-    button = (ttk.Button(root, text="√Joonista!", width=10, command=lambda: funcInspect(draw_function_input)))
+    button = (ttk.Button(function_win, text="√Joonista!", width=10, command=lambda: funcInspect(draw_function_input)))
     button.place(x=190, y=13)
 
     listbox.insert(0, "")
@@ -140,7 +140,7 @@ def Function(user_input):
 
     listbox.insert(END, "")
 
-    root.mainloop()
+    function_win.mainloop()
 
 def Equation(user_input):
 
@@ -154,27 +154,27 @@ def Equation(user_input):
     optimized_result = optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")
     draw_function_input = ["y=" + optimized_result]
 
-    root = Tk()
-    root.title("Aafrika")
+    equation_win = Tk()
+    equation_win.title("Aafrika")
 
-    y_scrollbar = Scrollbar(root)
+    y_scrollbar = Scrollbar(equation_win)
     y_scrollbar.pack(side=RIGHT, fill=Y)
 
-    listbox = Listbox(root, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=6, width=50,
+    listbox = Listbox(equation_win, yscrollcommand=y_scrollbar.set, selectmode=MULTIPLE, height=6, width=50,
                       selectbackground="gold2", activestyle="none")
     listbox.pack(side=LEFT, fill=BOTH, expand=1)
 
     y_scrollbar.config(command=listbox.yview)
 
     if solveFunction(optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")) == -1 or result == [""]:
-        button = (ttk.Button(root, text="√Kuva funktsioon!", width=17,
+        button = (ttk.Button(equation_win, text="√Kuva funktsioon!", width=17,
                              command=lambda: Function(user_input), state=DISABLED))
     else:
-        button = (ttk.Button(root, text="√Kuva funktsioon!", width=17, command=lambda: Function(user_input)))
+        button = (ttk.Button(equation_win, text="√Kuva funktsioon!", width=17, command=lambda: Function(user_input)))
 
     button.place(x=183, y=13)
 
-    button_draw = (ttk.Button(root, text="√Joonista funktsioon!", width=19, command=lambda: funcInspect(draw_function_input)))
+    button_draw = (ttk.Button(equation_win, text="√Joonista funktsioon!", width=19, command=lambda: funcInspect(draw_function_input)))
     button_draw.place(x=173, y=48)
 
     listbox.insert(0, "")
