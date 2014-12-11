@@ -103,7 +103,7 @@ def solveFunction(function):
         pass
     return output
 
-def Function(user_input
+def Function(user_input):
 
     user_input = user_input.replace(" ", "")
 
