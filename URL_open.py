@@ -28,6 +28,15 @@ def openSpecialUrlArgsHandler(keyword):
         keyword_str_nospace == 'moodleut' or
         keyword_str_nospace == 'moodle'):
         return 'URL_open.openSpecUtmoodle'
+    if main_kw == "ekss":
+        return "URL_open.openSpecEKSS"
+    if main_kw == 'õs':
+        return 'URL_open.openÕs'
+    if main_kw == "wolfram" or main_kw == "alpha" or main_kw == "wolframalpha" or main_kw == "wa":
+        return "URL_open.openSpecWA"
+    if main_kw.startswith("trans") or main_kw.startswith("tõlg") or main_kw.startswith("dict"):
+        return "URL_open.openDictionary"
+
 
 def openUrl(raw_url):
     url = ''
@@ -69,3 +78,37 @@ def openSpecLastfm(raw_query):
         webbrowser.open_new_tab('http://www.last.fm/search?q=' + query + '&type=all')
     else:
         webbrowser.open_new_tab('http://www.last.fm/')
+
+def openSpecEKSS(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://www.eki.ee/dict/ekss/index.cgi?Q=' + query + "&F=M")
+    else:
+        webbrowser.open_new_tab('http://www.eki.ee/dict/ekss/')
+
+def openÕs(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://www.eki.ee/dict/qs/index.cgi?Q=' + query + '&F=M')
+    else:
+        webbrowser.open_new_tab('http://www.eki.ee/dict/qs/')
+
+def openSpecWA(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://www.wolframalpha.com/input/?i=' + query)
+    else:
+        webbrowser.open_new_tab('http://www.wolframalpha.com/')
+
+def openDictionary(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    print(query_lst)
+    if len(query_lst) > 1:
+        query = ' '.join(query_lst[1:])
+        (webbrowser.open_new_tab('http://dictionary.sensagent.com/' +
+                                 "".join(query[3]) + "/" + query[1] + "-" + query[2]))
+    else:
+        webbrowser.open_new_tab('http://www.sensagent.com/')
