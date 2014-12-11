@@ -14,7 +14,7 @@ def changeSetting(raw_command):
     if command.startswith('always on top'):
         setting = command.replace('always on top','').strip()
     elif command.startswith('aot'):
-        setting = command.replace('aot').strip()
+        setting = command.replace('aot','').strip()
     if setting == 'on' or setting == '1' or setting == 'true':
         logging.info('Setting alwaysOnTop "on".')
         alwaysOnTop(True)
