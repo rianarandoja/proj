@@ -59,7 +59,7 @@ def solveFunction(function):
         pass
     try:
         ekstreemumid = solveEquation(solveDiff(function))
-    except IndexError:
+    except (IndexError, UnboundLocalError) as e:
         ekstreemumid = []
     if ekstreemumid != []:
         if len(ekstreemumid) > 1:
@@ -80,7 +80,7 @@ def solveFunction(function):
                 ekstreemumid = ("Ekstreemumpunkt (" + "".join(ekstreemumid[0][6:]) + ", " +
                                 str(sympify(function.replace("x", (ekstreemumid[0][5:].strip(")")))).evalf(2)) + ")")
                 output.append(ekstreemumid)
-            except (SympifyError, AttributeError, TypeError) as e:
+            except (SympifyError, AttributeError, TypeError, UnboundLocalError) as e:
                 pass
     try:
         kasvamisvahemik = "Kasvamisvahemik: " + " ,  ".join(solveInequality(str(solveDiff(function) + "> 0")))
