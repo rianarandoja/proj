@@ -31,7 +31,7 @@ def getFunctionWithArgs(args):
         # URL?
         return 'URL_open.openUrl'
     if Unit_converter.convertUnitsArgsHandler(args):
-        return 'Unit_converter.convertUnits(args)'
+        return 'Unit_converter.convertUnits'
     if Function_differentiation.solveDiffArgsHandler(args):
         # tuletis?
         return 'Function_differentiation.diffFunction'
