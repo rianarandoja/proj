@@ -13,15 +13,14 @@ def solveDiff(expr):
             variable = char
     expr = getMissingMultiplic(expr)
     expr = expr.replace(variable, 'x')
-    logging.info(expr)
     result = str(diff(expr, x))
     result = result.replace('x', variable)
-    logging.info(result)
     return result
 
 def diffFunction(user_input):
     user_input = "".join(user_input)
     result = solveDiff(user_input)
+    logging.info(result)
     resultWindow(result, user_input)
 
 if __name__ == '__main__':
