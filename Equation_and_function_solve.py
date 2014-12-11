@@ -6,6 +6,7 @@ from Inequality_solve import solveInequality
 from Function_inspection import funcInspect
 from tkinter import *
 import tkinter.ttk as ttk
+import logging
 
 x = symbols("x")
 
@@ -21,6 +22,7 @@ def solveEquation(equation):
             variable = char
     equation = optimizeEquationForSympy(equation)
     equation = equation.replace(variable, "x")
+    logging.info(equation)
     results = solve(equation, "x")
     for i in range(len(results)):
         try:
@@ -41,6 +43,7 @@ def solveEquation(equation):
             to_remove.append(el)
     for el in to_remove:
         output.remove(el)
+    logging.info(output)
     return output
 
 def solveFunction(function):
@@ -79,7 +82,7 @@ def solveFunction(function):
                 ekstreemumid = ("Ekstreemumpunkt (" + "".join(ekstreemumid[0][6:]) + ", " +
                                 str(sympify(function.replace("x", (ekstreemumid[0][5:].strip(")")))).evalf(2)) + ")")
                 output.append(ekstreemumid)
-            except (SympifyError, AttributeError) as e:
+            except (SympifyError, AttributeError, TypeError) as e:
                 pass
     try:
         kasvamisvahemik = "Kasvamisvahemik: " + " ,  ".join(solveInequality(str(solveDiff(function) + "> 0")))
@@ -89,16 +92,18 @@ def solveFunction(function):
     except (PolynomialError, NotImplementedError, TypeError) as e:
         pass
     try:
-        käänukohad = "Käänukohad: " + " ,  ".join(solveEquation(solveDiff(solveDiff(function))))
+        if " ,  ".join(solveEquation(solveDiff(solveDiff(function)))) != "":
+            käänukohad = "Käänukohad: " + " ,  ".join(solveEquation(solveDiff(solveDiff(function))))
+            output.append(käänukohad)
         kumerusvahemik = ("Kumerusvahemik: " + " ,  ".join(solveInequality(str(solveDiff(solveDiff(function))
                                                                                + "< 0"))))
         nõgususvahemik = ("Nõgususvahemik: " + " ,  ".join(solveInequality(str(solveDiff(solveDiff(function))
                                                                                + "> 0"))))
-        output.append(käänukohad)
         output.append(kumerusvahemik)
         output.append(nõgususvahemik)
     except (UnboundLocalError, PolynomialError, NotImplementedError, TypeError) as e:
         pass
+    logging.info(output)
     return output
 
 def Function(user_input):
