@@ -18,10 +18,6 @@ def weatherArgsHandler(args):
 def weatherInformation(location):
     # Aken:
     # Fotod eeldavad toplevelit.
-    weather_window = Toplevel()
-    weather_window.geometry("400x260")
-    weather_window.resizable(width=FALSE, height=FALSE)
-    canvas = Canvas(weather_window, width=400, height=260)
 
     for i in range(len(location)):
         location[i] = location[i].replace('ilm', '')
@@ -63,6 +59,10 @@ def weatherInformation(location):
     for weather in root.findall('station'):
         station_name = weather.find("name").text
         if station_name == location or station_name == location[:-1]:
+            weather_window = Toplevel()
+            weather_window.geometry("400x260")
+            weather_window.resizable(width=FALSE, height=FALSE)
+            canvas = Canvas(weather_window, width=400, height=260)
             station_name_exists = True
             # Määrab dünaamilise akna tausta:
             weather_window_background = str(weather.find("phenomenon").text)
