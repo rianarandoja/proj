@@ -36,6 +36,10 @@ def openSpecialUrlArgsHandler(keyword):
         return "URL_open.openSpecWA"
     if main_kw.startswith("trans") or main_kw.startswith("tõlg") or main_kw.startswith("dict"):
         return "URL_open.openDictionary"
+    if main_kw == "wiki" or main_kw == "wikipedia" or main_kw == "w":
+        return "URL_open.openWikiEn"
+    if main_kw == "viki" or main_kw == "vikipeedia" or main_kw == "v":
+        return "URL_open.openWikiEst"
 
 
 def openUrl(raw_url):
@@ -105,10 +109,25 @@ def openSpecWA(raw_query):
 
 def openDictionary(raw_query):
     query_lst = ''.join(raw_query).strip().lower().split()
-    print(query_lst)
     if len(query_lst) > 1:
         query = ' '.join(query_lst[1:])
         (webbrowser.open_new_tab('http://dictionary.sensagent.com/' +
                                  " ".join(query_lst[3:]) + "/" + query_lst[1] + "-" + query_lst[2]))
     else:
         webbrowser.open_new_tab('http://www.sensagent.com/')
+
+def openWikiEn(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://en.wikipedia.org/w/index.php?search=' + query)
+    else:
+        webbrowser.open_new_tab('http://en.wikipedia.org/wiki/Main_Page')
+
+def openWikiEst(raw_query):
+    query_lst = ''.join(raw_query).strip().lower().split()
+    if len(query_lst) > 1:
+        query = '+'.join(query_lst[1:])
+        webbrowser.open_new_tab('http://et.wikipedia.org/w/index.php?search=' + query)
+    else:
+        webbrowser.open_new_tab('http://et.wikipedia.org/wiki/Esileht')
