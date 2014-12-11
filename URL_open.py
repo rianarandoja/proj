@@ -109,6 +109,6 @@ def openDictionary(raw_query):
     if len(query_lst) > 1:
         query = ' '.join(query_lst[1:])
         (webbrowser.open_new_tab('http://dictionary.sensagent.com/' +
-                                 "".join(query[3]) + "/" + query[1] + "-" + query[2]))
+                                 " ".join(query_lst[3:]) + "/" + query_lst[1] + "-" + query_lst[2]))
     else:
         webbrowser.open_new_tab('http://www.sensagent.com/')
