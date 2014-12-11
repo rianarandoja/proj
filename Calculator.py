@@ -32,7 +32,6 @@ def calculator(raw_expr, round_to="3"):
     answer = str(expr.evalf(round_to))
     if raw_expr == answer:
         raise SyntaxError
-    print(answer.rstrip(('.')))  # DB
     answer = answer.rstrip('.')
     logging.info(answer)
     return answer
