@@ -40,6 +40,8 @@ def openSpecialUrlArgsHandler(keyword):
         return "URL_open.openWikiEn"
     if main_kw == "viki" or main_kw == "vikipeedia" or main_kw == "v":
         return "URL_open.openWikiEst"
+    if main_kw == "help":
+        return "URL_open.openHelp"
 
 
 def openUrl(raw_url):
@@ -131,3 +133,6 @@ def openWikiEst(raw_query):
         webbrowser.open_new_tab('http://et.wikipedia.org/w/index.php?search=' + query)
     else:
         webbrowser.open_new_tab('http://et.wikipedia.org/wiki/Esileht')
+
+def openHelp(*args):
+    webbrowser.open_new_tab('https://github.com/KasparPapli/proj/wiki/Help')
