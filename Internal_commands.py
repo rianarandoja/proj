@@ -10,14 +10,17 @@ def changeSettingArgsHandler(raw_command):
 def changeSetting(raw_command):
     command = ''.join(raw_command).replace('@','').strip().lower()
     logging.info('Found command: ' + command)
+    setting = ''
     if command.startswith('always on top'):
         setting = command.replace('always on top','').strip()
-        if setting == 'on' or setting == '1' or setting == 'true':
-            logging.info('Setting alwaysOnTop "on".')
-            alwaysOnTop(True)
-        elif setting == 'off'or setting == '0' or setting == 'false':
-            logging.info('Setting alwaysOnTop "off".')
-            alwaysOnTop(False)
+    elif command.startswith('aot'):
+        setting = command.replace('aot').strip()
+    if setting == 'on' or setting == '1' or setting == 'true':
+        logging.info('Setting alwaysOnTop "on".')
+        alwaysOnTop(True)
+    elif setting == 'off'or setting == '0' or setting == 'false':
+        logging.info('Setting alwaysOnTop "off".')
+        alwaysOnTop(False)
 
 def alwaysOnTop(is_on):
     #global root # Not defined
