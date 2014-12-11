@@ -21,6 +21,7 @@ def diffFunction(user_input):
     user_input = "".join(user_input)
     result = solveDiff(user_input)
     logging.info(result)
+    user_input = "(" + user_input + ")'"
     resultWindow(result, user_input)
 
 if __name__ == '__main__':
