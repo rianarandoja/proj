@@ -1,5 +1,6 @@
 from sympy import *
 from tkinter import *
+import logging
 
 def calculator(raw_expr, round_to="3"):
     raw_expr = (''.join(raw_expr)).strip()
@@ -27,11 +28,13 @@ def calculator(raw_expr, round_to="3"):
         expr = sympify("".join(list_))
     else:
         expr = sympify(raw_expr)
+    logging.info(expr)
     answer = str(expr.evalf(round_to))
     if raw_expr == answer:
         raise SyntaxError
     print(answer.rstrip(('.')))  # DB
     answer = answer.rstrip('.')
+    logging.info(answer)
     return answer
 
 def solveCombinations(combination):
