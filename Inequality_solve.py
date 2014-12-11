@@ -1,6 +1,7 @@
 from Equation_manipulation import *
 from sympy import *
 from tkinter import *
+import logging
 x = symbols("x")
 
 def InEqResultWindow(result, user_input="user input"):
@@ -34,6 +35,7 @@ def solveInequality(inequality):
     except PolynomialError:
         return -1
     result = optimizeEquationForSympy(result)
+    logging.info(result)
     try:
         result = round(float("".join(result[1:-1])), 2)
     except ValueError:
@@ -69,6 +71,7 @@ def solveInequality(inequality):
                 result = result.replace("(", "").replace(")", "")
                 result = result.replace("<", " < ").replace(">", " > ")
                 result = result.split(" või ")
+    logging.info(result)
     return result
 
 def Inequality(user_input):
