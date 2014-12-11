@@ -1,4 +1,6 @@
 import logging
+import Main_window
+
 
 def changeSettingArgsHandler(raw_command):
     if ''.join(raw_command).strip().startswith('@'):
@@ -18,10 +20,10 @@ def changeSetting(raw_command):
             alwaysOnTop(False)
 
 def alwaysOnTop(is_on):
-    global root # Not defined
+    #global root # Not defined
     if is_on:
-        root.WM_ATTRIBUTES('-topmost', 1)
+        Main_window.root.wm_attributes('-topmost', 1)
     else:
-        root.WM_ATTRIBUTES('-topmost', 0)
+        Main_window.root.wm_attributes('-topmost', 0)
 
 
