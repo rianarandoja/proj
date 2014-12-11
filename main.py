@@ -13,6 +13,8 @@ import Weather
 import URL_open
 import Equation_and_function_solve
 import Inequality_solve
+import Function_differentiation
+import Function_integration
 import Calculator
 
 
@@ -27,6 +29,10 @@ def getFunctionWithArgs(args):
     if URL_open.openUrlArgsHandler(args):
         # URL?
         return 'URL_open.openUrl'
+    if Function_differentiation.solveDiffArgsHandler(args):
+        return 'Function_differentiation.diffFunction'
+    if Function_integration.integrateFunctionArgsHandler(args):
+        return 'Function_integration.integrateFunction'
     if Inequality_solve.solveInequalityArgsHandler(args):
         # võrratus?
         return 'Inequality_solve.Inequality'
