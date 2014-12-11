@@ -41,6 +41,7 @@ def integrateFunction(expression):
                 b = after_integral[t_index+1:n_index].strip()
         result = str(integrate(integral, (x, float(a), float(b))))
     result = result.replace("x", variable)
+    expression = "integraal (" + expression + ")"
     try:
         result = round(float(result), 2)
     except ValueError:
