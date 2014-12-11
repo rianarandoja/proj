@@ -2,6 +2,7 @@
 from Equation_manipulation import isVariable, getMissingMultiplic
 from sympy import symbols, diff
 from Simple_result_window import resultWindow
+import logging
 
 x = symbols('x')
 
@@ -12,8 +13,10 @@ def solveDiff(expr):
             variable = char
     expr = getMissingMultiplic(expr)
     expr = expr.replace(variable, 'x')
+    logging.info(expr)
     result = str(diff(expr, x))
     result = result.replace('x', variable)
+    logging.info(result)
     return result
 
 def diffFunction(user_input):
