@@ -22,7 +22,7 @@ def convertUnitsArgsHandler(raw_args):
 def convertUnits(command):
     command = "".join(command).split()
     assert command[0].startswith('teis') or command[0].startswith('conv')
-    command = ''.join(command[1:])
+    command = ' '.join(command[1:])
 
 
     if " to " in command:
