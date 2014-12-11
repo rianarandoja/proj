@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from math import *
+import logging
 from Equation_manipulation import optimizeEquationForSympy
 
 def funcInspectArgsHandler(user_args):
@@ -12,18 +13,12 @@ def funcInspectArgsHandler(user_args):
     return False
 
 
-def funcInspect(raw_equations,
-                text_1="",
-                text_2="",
-                text_3="",
-                text_4="",
-                text_5="",
-                text_6=""):
+def funcInspect(raw_equations):
 
     """Funktsioon võtab sisse listi valemitega. Valemite arv ei ole piiratud. Funktsioon joonistab seejärel teljestiku ja
      ja graafiku. Pärast igat suurendust joonistatakse kõik uuesti. Uuesti ei joonistata navigeerides, sellest tulenevalt on
      navigeerimine limiteeritud (jõudlust silmas pidades).
-     Akna suuruse muutmine põhjustab koordinaatide arvutamises vigu. Tekstiväljad on teistele funktsioonidele kasutamiseks.
+     Akna suuruse muutmine põhjustab koordinaatide arvutamises vigu.
      - Väärtus axis_num kalibreerib numbrid teljestiku ja pikslitega. Ta on oluline, et suurendus töötaks.
      - Väärtus magnification_level määrab ära võrrandi suurenduse
      - Väärtused move_to_x ja move_to_y liidetakse pikslitele otsa, mis tagab õigete koordinaadite kuvamise pärast graafiku liigutamist.
@@ -44,7 +39,7 @@ def funcInspect(raw_equations,
                                                             .replace('f(x)', '')
                                                             .replace('=', '') + '= 0')
         equations[i] = equations[i][:-2]
-        print(equations[i])
+    logging.info('[%s]' %', '.join(equations))
 
 
     height_width = 800
@@ -67,22 +62,14 @@ def funcInspect(raw_equations,
     global count_event  # Koordinaatide kuvamise fn.
     count_event = 0  # Koordinaatide kuvamise fn.
 
-    root = Tk()
-    root.title("Funktsioonide uurimine")
-    root.geometry("400x400")
-    root.resizable(width=FALSE, height=FALSE)
-    canvas = Canvas(root, width=height_width, height=height_width, background="white")
+    function_inspection_window = Tk()
+    function_inspection_window.title("Funktsioonide uurimine")
+    function_inspection_window.geometry("400x400")
+    function_inspection_window.resizable(width=FALSE, height=FALSE)
+    canvas = Canvas(function_inspection_window, width=height_width, height=height_width, background="white")
     font = "Calibri"
 
-    def getCartesianCoordinateSystem(height_=height_width,
-                                     width_=height_width,
-                                     font=font,
-                                     text_1=text_1,
-                                     text_2=text_2,
-                                     text_3=text_3,
-                                     text_4=text_4,
-                                     text_5=text_5,
-                                     text_6=text_6):
+    def getCartesianCoordinateSystem(height_=height_width,width_=height_width, font=font):
         global axis_num
         x_axis = (-width_, height_//4, width_, height_//4)  # X-telje pikkus
         y_axis = (width_//4, -height_, width_//4, height_)  # Y-telje pikkus
@@ -112,13 +99,6 @@ def funcInspect(raw_equations,
         canvas.create_line(x_axis, fill=axis_color, arrow=LAST)  # X-telg (koos noolega)
         canvas.create_line(y_axis, fill=axis_color, arrow=FIRST)  # Y-telg (koos noolega)
 
-        # Tekstiväljad:
-        canvas.create_text(60, 300, text=text_1, font=font)
-        canvas.create_text(60, 330, text=text_2, font=font)
-        canvas.create_text(60, 360, text=text_3, font=font)
-        canvas.create_text(260, 300, text=text_4, font=font)
-        canvas.create_text(260, 330, text=text_5, font=font)
-        canvas.create_text(260, 360, text=text_6, font=font)
 
     def plot_function(width_=height_width,
                       function=equations):
@@ -252,22 +232,22 @@ def funcInspect(raw_equations,
     def down(event=""):
         scroll_function(down=True)
 
-    root.bind("<Button-1>", get_Coordinates)  # Koordinaatide kuvamise bindimine.
-    root.bind("<MouseWheel>", onWheel)
-    root.bind("<Up>", up)
-    root.bind("<Down>", down)
-    root.bind("<Left>", left)
-    root.bind("<Right>", right)
+    function_inspection_window.bind("<Button-1>", get_Coordinates)  # Koordinaatide kuvamise bindimine.
+    function_inspection_window.bind("<MouseWheel>", onWheel)
+    function_inspection_window.bind("<Up>", up)
+    function_inspection_window.bind("<Down>", down)
+    function_inspection_window.bind("<Left>", left)
+    function_inspection_window.bind("<Right>", right)
 
-    menu_bar = Menu(root)
+    menu_bar = Menu(function_inspection_window)
     menu_bar.add_command(label="Vähenda", command=zoom_out)
     menu_bar.add_command(label="Suurenda", command=zoom_in)
     menu_bar.add_command(label="⇐", command=left)
     menu_bar.add_command(label="⇑", command=up)
     menu_bar.add_command(label="⇒", command=right)
     menu_bar.add_command(label="⇓", command=down)
-    root.config(menu=menu_bar)
+    function_inspection_window.config(menu=menu_bar)
 
     getCartesianCoordinateSystem()
     plot_function()
-    root.mainloop()
+    function_inspection_window.mainloop()
