@@ -1,6 +1,7 @@
 from Equation_manipulation import *
 from sympy import *
 from tkinter import *
+import logging
 x = symbols("x")
 
 def solveInequalityArgsHandler(raw_args):
@@ -37,6 +38,7 @@ def solveInequality(inequality):
     inequality = optimizeEquationForSympy(inequality)
     try:
         result = str(solve(inequality))
+        logging.info(result)
     except PolynomialError:
         return -1
     result = optimizeEquationForSympy(result)
@@ -45,6 +47,8 @@ def solveInequality(inequality):
     except ValueError:
         if result == 'False':
             result = ["Lahendid puuduvad"]
+        elif result == "True":
+            result = ["Lahendiks sobivad kõik reaalarvud"]
         else:
             im_index = result.index("im")
             variable = result[im_index + 4]
@@ -86,5 +90,5 @@ def Inequality(user_input):
 
 
 if __name__ == '__main__':
-    print(Inequality(["(x-4)(5+x)(x-2)<0"]))
-    #print(Inequality("(x)**0.5-1 > 0 "))
+    print(Inequality(["4>0"]))
+    print(Inequality("(x)**2 > 0 "))
