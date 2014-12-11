@@ -1,5 +1,6 @@
 from sympy.physics.units import *
 from Simple_result_window import resultWindow
+import logging
 
 added_units = ({"pints": "liters=0.568261", "gallon": "liters=4.54609",
                 "pound": "kg=0.453592", "ounce": "kg=0.0283495", "stone": "kg=6.35029",
@@ -30,7 +31,9 @@ def convertUnits(command):
             convertible = float(convert_from[:i+1].strip())
             from_unit = convert_from[i+1:].strip()
             break
-
+    logging.info(convertible)
+    logging.info(from_unit)
+    logging.info(to_unit)
     if from_unit in c_list or from_unit in k_list or from_unit in f_list:
         # temperature
         if from_unit in f_list:
@@ -74,11 +77,12 @@ def convertUnits(command):
                                                         float(added_units[to_unit].split("=")[1]))
             else:
                 return -1
-
+    logging.info(answer)
     try:
         result = str(round(float(answer), 2)) + " " + to_unit
     except TypeError:
         return -1
+    logging.info(result)
     resultWindow(result, command)
     return result
 
