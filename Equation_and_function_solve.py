@@ -105,9 +105,10 @@ def solveFunction(function):
 
 def Function(user_input):
 
+    user_input = "".join(user_input)
+
     user_input = user_input.replace(" ", "")
 
-    user_input = "".join(user_input)
     if "abs" in user_input:
             return -1
 
