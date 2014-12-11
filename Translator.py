@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import logging
 import webbrowser
 
 
@@ -34,16 +35,20 @@ global dict_en_es, dict_es_en
 
 dict_flag = False
 
-root = Tk()
-root.title("Sõnastik")
-root.geometry("200x200")
-x_scrollbar = Scrollbar(root, orient=HORIZONTAL)
-x_scrollbar.pack(side=BOTTOM, fill=X)
-y_scrollbar = Scrollbar(root)
-y_scrollbar.pack(side=RIGHT, fill=Y)
-listbox = Listbox(root, yscrollcommand=y_scrollbar.set, xscrollcommand=x_scrollbar.set)
-x_scrollbar.config(command=listbox.xview)
-y_scrollbar.config(command=listbox.yview)
+
+def create_translation_window():
+    global translation_listbox
+    global translation_window
+    translation_window = Tk()
+    translation_window.title("Sõnastik")
+    translation_window.geometry("200x200")
+    x_scrollbar = Scrollbar(translation_window, orient=HORIZONTAL)
+    x_scrollbar.pack(side=BOTTOM, fill=X)
+    y_scrollbar = Scrollbar(translation_window)
+    y_scrollbar.pack(side=RIGHT, fill=Y)
+    translation_listbox = Listbox(translation_window, yscrollcommand=y_scrollbar.set, xscrollcommand=x_scrollbar.set)
+    x_scrollbar.config(command=translation_listbox.xview)
+    y_scrollbar.config(command=translation_listbox.yview)
 
 
 def read_in(database, dict_1, dict_2):
@@ -90,11 +95,16 @@ if not dict_flag:
     available_dictionaries = [dict_et_en, dict_de_en, dict_fr_en, dict_it_en, dict_es_en, et, de, es, fr, it]
 
     universal_dict = []
+    translation_listbox = []
+
 
 def direct_match(input, dictionary):
+    global translation_listbox
     if input in dictionary:
         output = dictionary[input]
-        listbox.insert(END, output + " | " + input)
+        if not translation_listbox:
+            create_translation_window()
+        translation_listbox.insert(END, output + " | " + input)
         return True
 
 
@@ -109,12 +119,16 @@ def non_direct_match(input):
 
 
 def getTranslation(input):
+    global translation_listbox
+    global translation_window
     if len(input) > 1:
         dictionary_for_url = input[1]
+        logging.info("dictionary for url: " + dictionary_for_url)
         try:
             dictionary = eval(input[1])
+            logging.info("dictionary= " + input[1])
         except:
-            print("Dictionary not available")
+            logging.info("Dictionary not available")
             if messagebox.askyesno("Ended up in Sahara...", "Tundmatu sihtkeel."
                                                             " Kutsun abiväed? (Google Translate?)"):
                 webbrowser.open_new_tab("https://translate.google.ee/#auto/" + input[1] + "/" + input[0])
@@ -123,16 +137,17 @@ def getTranslation(input):
         dictionary = et
 
     input = input[0]
+    logging.info("input= " + input)
     listbox_ = False
 
     if input in dictionary:
-        print("Using direct match")
+        logging.info("Using direct match")
         direct_match(input, dictionary)
-        listbox.pack(side=LEFT, fill=BOTH, expand=1)
-        root.mainloop()
+        translation_listbox.pack(side=LEFT, fill=BOTH, expand=1)
+        translation_window.mainloop()
         return
     else:
-        print("Using non-direct match")
+        logging.info("Using non-direct match")
         non_direct_match(input)
         for word in universal_dict:
             if dictionary_for_url != "en":
@@ -140,17 +155,20 @@ def getTranslation(input):
                     listbox_ = True
             else:
                 try:
-                    listbox.insert(END, word + " | " + dictionary[word])
+                    if not translation_listbox:
+                        if dictionary[word]:
+                            create_translation_window()
+                    translation_listbox.insert(END, word + " | " + dictionary[word])
                     listbox_ = True
                 except KeyError:
                     continue
 
         if listbox_:
-            listbox.pack(side=LEFT, fill=BOTH, expand=1)
-            root.mainloop()
+            translation_listbox.pack(side=LEFT, fill=BOTH, expand=1)
+            translation_window.mainloop()
             return
 
-    print("Word not in dictionary")
+    logging.info("Word not in dictionary")
     if messagebox.askyesno("Ended up in Sahara...", "Vaste leidmine ebaõnnestus, sissekanne puudub sõnastikust!"
                                                     " Kutsun abiväed? (Google Translate?)"):
         webbrowser.open_new_tab("https://translate.google.ee/#auto/" + dictionary_for_url + "/" + input)
