@@ -35,7 +35,6 @@ def solveInequality(inequality):
     except PolynomialError:
         return -1
     result = optimizeEquationForSympy(result)
-    logging.info(result)
     try:
         result = round(float("".join(result[1:-1])), 2)
     except ValueError:
@@ -71,12 +70,12 @@ def solveInequality(inequality):
                 result = result.replace("(", "").replace(")", "")
                 result = result.replace("<", " < ").replace(">", " > ")
                 result = result.split(" või ")
-    logging.info(result)
     return result
 
 def Inequality(user_input):
     user_input = "".join(user_input)
     result = solveInequality(user_input)
+    logging.info(result)
     if result == -1:
         return -1
     InEqResultWindow(result, user_input)
