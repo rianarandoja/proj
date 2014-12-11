@@ -3,6 +3,7 @@ import webbrowser
 from tkinter import *
 from tkinter import messagebox
 from urllib.request import urlopen
+import logging
 
 
 def weatherArgsHandler(args):
@@ -36,7 +37,7 @@ def weatherInformation(location):
     except:
         messagebox.showinfo(message='Ühendamine Riigi Ilmateenistusega ebaõnnestus. Proovi hiljem uuesti või '
                                     'kontakteeru oma kohaliku IT osakonnaga! :)', title='Feeling angry I am.')
-        print("No internet connection or wrong URL")
+        logging.info("No internet connection or wrong URL")
         return
 
     # Teeb kasutaja sisendi xml-iga vastavaks.
@@ -69,7 +70,7 @@ def weatherInformation(location):
                 background_img = PhotoImage(file=".\\Photos_for_weather\\" + str(weather_window_background) + ".gif")
             except:
                 background_img = PhotoImage(file=".\\Photos_for_weather\\Clear.gif")
-                print("Background image not found: " + station_name)
+                logging.info("Background image not found: " + station_name)
             # Teksti taust:
             canvas.create_image(0, 0, image=background_img, anchor="nw")
             text_background = PhotoImage(file=".\\Photos_for_weather\\text_background.png")
@@ -93,5 +94,5 @@ def weatherInformation(location):
     # Kui sisendit ei leita, avatakse brauser:
     if not station_name_exists:
         webbrowser.open('http://www.ilmateenistus.ee/')
-        print("station name was not found")
+        logging.info("station name was not found")
         return
