@@ -1,8 +1,13 @@
 from Equation_manipulation import *
 from sympy import *
 from tkinter import *
-import logging
 x = symbols("x")
+
+def solveInequalityArgsHandler(raw_args):
+    args = ''.join(raw_args)
+    if '<' in args or '>' in args:
+        return True
+    return False
 
 def InEqResultWindow(result, user_input="user input"):
     inEq_win = Tk()
@@ -75,7 +80,6 @@ def solveInequality(inequality):
 def Inequality(user_input):
     user_input = "".join(user_input)
     result = solveInequality(user_input)
-    logging.info(result)
     if result == -1:
         return -1
     InEqResultWindow(result, user_input)
