@@ -86,5 +86,5 @@ def Inequality(user_input):
 
 
 if __name__ == '__main__':
-    #print(Inequality(["(x-4)(5+x)(x-2)<0"]))
+    print(Inequality(["(x-4)(5+x)(x-2)<0"]))
     #print(Inequality("(x)**0.5-1 > 0 "))
