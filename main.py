@@ -1,18 +1,23 @@
+__version__ = '0.0'
+
 from tkinter import *
 from tkinter import ttk
+from datetime import datetime
+import logging
 import Parse_input
 import Function_keywords
+import Internal_commands
 import Function_inspection
 import Weather
 import URL_open
-import Equation_solve
+import Equation_and_function_solve
 import Calculator
 
 
-dict_et_en = {}
-dict_en_et = {}
-
 def getFunctionWithArgs(args):
+    if Internal_commands.changeSettingArgsHandler(args):
+        # internal setting change?
+        return 'Internal_commands.changeSetting'
     spec_url = URL_open.openSpecialUrlArgsHandler(args)
     if spec_url is not None:
         # special url?
@@ -26,10 +31,10 @@ def getFunctionWithArgs(args):
     if Function_inspection.funcInspectArgsHandler(args):
         # function?
         return 'Function_inspection.funcInspect'
-    if Equation_solve.solveEquationArgsHandler(args):
+    if Equation_and_function_solve.solveEquationArgsHandler(args):
         # equation?
-        return 'Equation_solve.solveEquation'
-    return 'Calculator.calculator'
+        return 'Equation_and_function_solve.Equation'
+    return 'Calculator.Calc'
 
 def getFunctionWithComs(user_coms):
     user_coms_str = ''.join(user_coms)
@@ -55,6 +60,11 @@ def incorrectInput():
         eval('root.after(' + str(400*i) + ', errorEntry)')
         eval('root.after(' + str(400*(i+1)) + ', restoreEntry)')
 
+def userExit():
+    global root
+    logging.info('Closed ReisidAafrikasse.')
+    root.destroy()
+
 def main(*args):
     global user_args
     user_args_coms = Parse_input.parseInput(main_ent.get(), '[', ']')
@@ -64,30 +74,38 @@ def main(*args):
     elif user_args_coms:
         # If user input is non-empty
         user_args, user_coms = user_args_coms
-        print('args:', user_args)  #| DB
-        print('coms:', user_coms)  #| DB
+        logging.info('Argument(s) found: [%s]' %', '.join(user_args))
+
         if user_coms:
-            #print('command')  # DB
+            logging.info('Command(s) found: [%s]' %', '.join(user_coms))
             corr_func_name = getFunctionWithComs(user_coms)
             if corr_func_name is None:
                 corr_func_name = getFunctionWithArgs(user_args)
+                logging.info('Found function by arguments: %s' % corr_func_name)
+            else:
+                logging.info('Found function by commands: %s' %corr_func_name)
         else:
-            #print('w/o command')  # DB
             corr_func_name = getFunctionWithArgs(user_args)
+            logging.info('Found function by arguments: %s' % corr_func_name)
 
-        corr_func = corr_func_name + '(user_args)'
+        #eval(corr_func_name + '(user_args)')
+
         try:
-            eval(corr_func)
-        except:
+            eval(corr_func_name + '(user_args)')
+        except Exception as e:
             incorrectInput()
+            logging.exception(e)
+
 
 
 ###########
+logging.basicConfig(filename='.\\logs\\RA_%s.txt' %datetime.now().strftime("%y.%m.%d.%H-%M-%S"), level=logging.DEBUG,
+                    format='%(asctime)s | %(levelname)s | %(funcName)s | %(message)s')
+logging.info('Started ReisidAafrikasse %s.' %__version__)
 
+global root
 root = Tk()
-root.title('ReisidAafrikasse')
-root.wm_attributes('-topmost', 1)  # Always of top on
-#root.wm_attributes('-topmost', 0)  # Always of top off
+root.title('ReisidAafrikasse %s' %__version__)
 root.resizable(width=FALSE, height=FALSE)
 root.geometry('345x105')
 
@@ -100,9 +118,6 @@ mainframe.place(x=0, y=0, relwidth=1, relheight=1)
 bg_img = PhotoImage(file='main_bg.png')
 bg_lbl = Label(mainframe, image=bg_img)
 bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
-
-# Menu for always on top here---
-
 
 main_ent_st = ttk.Style()
 # Fimagzen
@@ -124,4 +139,7 @@ main_ent.focus_set()
 ttk.Button(mainframe, text='√Reisile!', command=main).place(x=135, y=65)
 main_ent.bind('<Return>', main)
 
+root.protocol('WM_DELETE_WINDOW', userExit)
+
 root.mainloop()
+
