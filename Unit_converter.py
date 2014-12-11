@@ -12,14 +12,19 @@ f_list = ["Fahrenheit", "fahrenheit", "F"]
 k_list = ["Kelvin", "kelvin", "K"]
 c_list = ["Celsius", "celsius", "C"]
 
-def convertUnitsArgsHandler(args):
-    args = "".join(args).strip()
-    if args.startswith("teisen") or args.startswith("conv"):
+def convertUnitsArgsHandler(raw_args):
+    args = ''.join(raw_args).strip()
+    if args.startswith('conv') or args.startswith('teis'):
         return True
     return False
 
+
 def convertUnits(command):
-    command = "".join(command)
+    command = "".join(command).split()
+    assert command[0].startswith('teis') or command[0].startswith('conv')
+    command = ''.join(command[1:])
+
+
     if " to " in command:
         separator_index = command.index(" to ")
         to_unit = command[separator_index+3:].strip()
