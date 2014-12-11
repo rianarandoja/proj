@@ -38,7 +38,7 @@ def funcInspect(raw_equations):
         equations[i] = optimizeEquationForSympy(equations[i].replace('y', '')
                                                             .replace('f(x)', '')
                                                             .replace('=', '') + '= 0')
-        equations[i] = equations[i][:-2]
+        equations[i] = equations[i][:-2]  # removes -0 from end
     logging.info('[%s]' %', '.join(equations))
 
 
