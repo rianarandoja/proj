@@ -16,6 +16,7 @@ import Inequality_solve
 import Function_differentiation
 import Function_integration
 import Calculator
+import Unit_converter
 
 
 def getFunctionWithArgs(args):
@@ -29,9 +30,13 @@ def getFunctionWithArgs(args):
     if URL_open.openUrlArgsHandler(args):
         # URL?
         return 'URL_open.openUrl'
+    if Unit_converter.convertUnitsArgsHandler(args):
+        return 'Unit_converter.convertUnits(args)'
     if Function_differentiation.solveDiffArgsHandler(args):
+        # tuletis?
         return 'Function_differentiation.diffFunction'
     if Function_integration.integrateFunctionArgsHandler(args):
+        # integraal?
         return 'Function_integration.integrateFunction'
     if Inequality_solve.solveInequalityArgsHandler(args):
         # võrratus?
