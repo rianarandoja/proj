@@ -1,6 +1,7 @@
 from Equation_manipulation import *
 from sympy import integrate, symbols
 from Simple_result_window import resultWindow
+import logging
 
 x = symbols('x')
 
@@ -12,6 +13,8 @@ def integrateFunction(expression):
     integral = integral.replace(variable, 'x')
     # separating the integration part from the lanes part
     after_integral = (expression[d_index+2:]).strip()
+    logging.info(integral)
+    logging.info(after_integral)
     if after_integral == "":
         result = str(integrate(integral, x))
         # if the integral in infinite
@@ -43,7 +46,7 @@ def integrateFunction(expression):
     except ValueError:
         pass
     resultWindow(result, expression)
-    return result
+    logging.info(result)
 
 if __name__ == '__main__':
     print(integrateFunction(["2y dy from 3 to 5"]))
