@@ -1,11 +1,12 @@
 from sympy import *
 from tkinter import *
 import logging
+from Equation_manipulation import getMissingMultiplic
 
 def calculator(raw_expr, round_to="3"):
     raw_expr = (''.join(raw_expr)).strip()
     round_to = sympify(round_to)
-    if "C" or "V" in raw_expr:
+    if "C" in raw_expr or "V" in raw_expr:
         list_ = []
         if "+" not in raw_expr and "-" not in raw_expr:
             list_.append(raw_expr)
@@ -27,7 +28,7 @@ def calculator(raw_expr, round_to="3"):
                 pass
         expr = sympify("".join(list_))
     else:
-        expr = sympify(raw_expr)
+        expr = sympify(getMissingMultiplic(raw_expr))
     logging.info(expr)
     answer = str(expr.evalf(round_to))
     if raw_expr == answer:
