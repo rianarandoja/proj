@@ -7,6 +7,7 @@ from Function_inspection import funcInspect
 from tkinter import *
 import tkinter.ttk as ttk
 import logging
+from URL_open import openSpecWA
 
 x = symbols("x")
 
@@ -110,7 +111,8 @@ def Function(user_input):
     user_input = user_input.replace(" ", "")
 
     if "abs" in user_input:
-            return -1
+        openSpecWA('wa ' + user_input)
+        return
 
     optimized_result = optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")
 
@@ -154,7 +156,8 @@ def Equation(user_input):
     user_input = "".join(user_input)
 
     if "abs" in user_input:
-        return -1
+        openSpecWA('wa ' + user_input)
+        return
 
     result = solveEquation(user_input)
 
