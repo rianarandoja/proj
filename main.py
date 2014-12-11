@@ -1,16 +1,18 @@
-__version__ = '0.0'
+__version__ = 0.1
 
 from tkinter import *
 from tkinter import ttk
 from datetime import datetime
 import logging
+import Main_window
+import Internal_commands
 import Parse_input
 import Function_keywords
-import Internal_commands
 import Function_inspection
 import Weather
 import URL_open
 import Equation_and_function_solve
+import Inequality_solve
 import Calculator
 
 
@@ -22,18 +24,21 @@ def getFunctionWithArgs(args):
     if spec_url is not None:
         # special url?
         return spec_url
-    if Weather.weatherArgsHandler(args):
-        # weather request?
-        return 'Weather.weatherInformation'
     if URL_open.openUrlArgsHandler(args):
         # URL?
         return 'URL_open.openUrl'
+    if Inequality_solve.solveInequalityArgsHandler(args):
+        # võrratus?
+        return 'Inequality_solve.Inequality'
     if Function_inspection.funcInspectArgsHandler(args):
         # function?
-        return 'Function_inspection.funcInspect'
+        return 'Equation_and_function_solve.Function'
     if Equation_and_function_solve.solveEquationArgsHandler(args):
         # equation?
         return 'Equation_and_function_solve.Equation'
+    if Weather.weatherArgsHandler(args):
+        # weather request?
+        return 'Weather.weatherInformation'
     return 'Calculator.Calc'
 
 def getFunctionWithComs(user_coms):
@@ -57,13 +62,13 @@ def incorrectInput():
     global last_inp
     last_inp = main_ent.get()
     for i in range(0, 3, 2):
-        eval('root.after(' + str(400*i) + ', errorEntry)')
-        eval('root.after(' + str(400*(i+1)) + ', restoreEntry)')
+        eval('Main_window.root.after(' + str(400*i) + ', errorEntry)')
+        eval('Main_window.root.after(' + str(400*(i+1)) + ', restoreEntry)')
 
 def userExit():
     global root
     logging.info('Closed ReisidAafrikasse.')
-    root.destroy()
+    Main_window.root.destroy()
 
 def main(*args):
     global user_args
@@ -88,8 +93,6 @@ def main(*args):
             corr_func_name = getFunctionWithArgs(user_args)
             logging.info('Found function by arguments: %s' % corr_func_name)
 
-        #eval(corr_func_name + '(user_args)')
-
         try:
             eval(corr_func_name + '(user_args)')
         except Exception as e:
@@ -99,47 +102,45 @@ def main(*args):
 
 
 ###########
-logging.basicConfig(filename='.\\logs\\RA_%s.txt' %datetime.now().strftime("%y.%m.%d.%H-%M-%S"), level=logging.DEBUG,
-                    format='%(asctime)s | %(levelname)s | %(funcName)s | %(message)s')
-logging.info('Started ReisidAafrikasse %s.' %__version__)
+if __name__ == '__main__':
+    logging.basicConfig(filename='.\\logs\\RA_%s.txt' %datetime.now().strftime("%y.%m.%d.%H-%M-%S"), level=logging.DEBUG,
+                        format='%(asctime)s | %(levelname)s | %(funcName)s | %(message)s')
+    logging.info('Started ReisidAafrikasse %s.' %__version__)
 
-global root
-root = Tk()
-root.title('ReisidAafrikasse %s' %__version__)
-root.resizable(width=FALSE, height=FALSE)
-root.geometry('345x105')
+    Main_window.root.title('ReisidAafrikasse %s' %__version__)
+    Main_window.root.resizable(width=FALSE, height=FALSE)
+    Main_window.root.geometry('345x105')
 
-mainframe_st = ttk.Style()
-mainframe_st.configure('mainframe.TFrame', background='white')
+    mainframe_st = ttk.Style()
+    mainframe_st.configure('mainframe.TFrame', background='white')
 
-mainframe = ttk.Frame(root, style='mainframe.TFrame')
-mainframe.place(x=0, y=0, relwidth=1, relheight=1)
+    mainframe = ttk.Frame(Main_window.root, style='mainframe.TFrame')
+    mainframe.place(x=0, y=0, relwidth=1, relheight=1)
 
-bg_img = PhotoImage(file='main_bg.png')
-bg_lbl = Label(mainframe, image=bg_img)
-bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
+    bg_img = PhotoImage(file='main_bg.png')
+    bg_lbl = Label(mainframe, image=bg_img)
+    bg_lbl.place(x=0, y=0, relwidth=1, relheight=1)
 
-main_ent_st = ttk.Style()
-# Fimagzen
-# http://stackoverflow.com/questions/17635905/ttk-entry-background-colour [20.11.14]
-main_ent_st.element_create("plain.field", "from", "clam")
-main_ent_st.layout("EntryStyle.TEntry",
-                   [('Entry.plain.field', {'children': [(
-                       'Entry.background', {'children': [(
-                           'Entry.padding', {'children': [(
-                               'Entry.textarea', {'sticky': 'nswe'})],
-                      'sticky': 'nswe'})], 'sticky': 'nswe'})],
-                      'border':'2', 'sticky': 'nswe'})])
+    main_ent_st = ttk.Style()
+    # Fimagzen
+    # http://stackoverflow.com/questions/17635905/ttk-entry-background-colour [20.11.14]
+    main_ent_st.element_create("plain.field", "from", "clam")
+    main_ent_st.layout("EntryStyle.TEntry",
+                       [('Entry.plain.field', {'children': [(
+                           'Entry.background', {'children': [(
+                               'Entry.padding', {'children': [(
+                                   'Entry.textarea', {'sticky': 'nswe'})],
+                          'sticky': 'nswe'})], 'sticky': 'nswe'})],
+                          'border':'2', 'sticky': 'nswe'})])
 
 
-main_ent = ttk.Entry(mainframe, width=50, style='EntryStyle.TEntry')
-main_ent.place(x=20, y=45)
-main_ent.focus_set()
+    main_ent = ttk.Entry(mainframe, width=50, style='EntryStyle.TEntry')
+    main_ent.place(x=20, y=45)
+    main_ent.focus_set()
 
-ttk.Button(mainframe, text='√Reisile!', command=main).place(x=135, y=65)
-main_ent.bind('<Return>', main)
+    ttk.Button(mainframe, text='√Reisile!', command=main).place(x=135, y=65)
+    main_ent.bind('<Return>', main)
 
-root.protocol('WM_DELETE_WINDOW', userExit)
+    Main_window.root.protocol('WM_DELETE_WINDOW', userExit)
 
-root.mainloop()
-
+    Main_window.root.mainloop()
