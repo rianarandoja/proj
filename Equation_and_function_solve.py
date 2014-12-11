@@ -22,7 +22,6 @@ def solveEquation(equation):
             variable = char
     equation = optimizeEquationForSympy(equation)
     equation = equation.replace(variable, "x")
-    logging.info(equation)
     results = solve(equation, "x")
     for i in range(len(results)):
         try:
@@ -43,7 +42,6 @@ def solveEquation(equation):
             to_remove.append(el)
     for el in to_remove:
         output.remove(el)
-    logging.info(output)
     return output
 
 def solveFunction(function):
@@ -103,7 +101,6 @@ def solveFunction(function):
         output.append(nõgususvahemik)
     except (UnboundLocalError, PolynomialError, NotImplementedError, TypeError) as e:
         pass
-    logging.info(output)
     return output
 
 def Function(user_input):
@@ -115,6 +112,8 @@ def Function(user_input):
     optimized_result = optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")
 
     result = solveFunction(optimized_result)
+
+    logging.info(result)
 
     if result == -1:
         return -1
@@ -155,6 +154,8 @@ def Equation(user_input):
         return -1
 
     result = solveEquation(user_input)
+
+    logging.info(result)
 
     optimized_result = optimizeEquationForSympy(user_input.replace("y=", "")).replace("-0", "")
     draw_function_input = ["y=" + optimized_result]
