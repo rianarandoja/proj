@@ -5,8 +5,17 @@ import logging
 
 x = symbols('x')
 
+def integrateFunctionArgsHandler(raw_args):
+    args = ''.join(raw_args).strip()
+    if args.startswith('integr'):
+        return True
+    return False
+
 def integrateFunction(expression):
-    expression = "".join(expression)
+    expression = "".join(expression).split()
+    assert expression[0].startswith('integr')
+    expression = ''.join(expression[1:])
+
     d_index = expression.index("d")
     integral = getMissingMultiplic((expression[:d_index]).strip())
     variable = expression[d_index+1]
