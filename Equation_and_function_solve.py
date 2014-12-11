@@ -192,7 +192,7 @@ def Equation(user_input):
     if result == ([] or [""]):
         listbox.insert(END, " "*15 + "Sorry!")
         listbox.insert(END, " "*10 + "Ma veel ei oska ")
-        listbox.insert(END, " "*10 + "imaginaarühikutega arvutada!")
+        listbox.insert(END, " "*10 + "kompleksarvudega arvutada!")
 
     for item in result:
         if item != "":
